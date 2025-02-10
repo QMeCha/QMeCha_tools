@@ -7,7 +7,7 @@
    | |__| |_ | |   | || ____|| |_____ | | | |/ ___ |        
    \________)|_|   |_||_____)\_______)|_| |_|\_____|        
                                                     
-   Matteo Barborini (matteo.barborini@gmail.com)
+   Matteo Barborini (matteo.barborini.at.gmail.com)
 ```
 
 ### Basis sets and the pseudopotentials in QMeCha format.
