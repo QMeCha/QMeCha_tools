@@ -1,3 +1,15 @@
+
+```
+    _______   _______         _______  _                    
+   (_______) (_______)       (_______)| |                   
+    _    _    _  _  _  _____  _       | |__   _____         
+   | |  | |  | ||_|| || ___ || |      |  _ \ (____ |        
+   | |__| |_ | |   | || ____|| |_____ | | | |/ ___ |        
+   \________)|_|   |_||_____)\_______)|_| |_|\_____|        
+                                                    
+   Matteo Barborini (matteo.barborini@gmail.com)
+```
+
 ### Basis sets and the pseudopotentials in QMeCha format.
 
 The organization of the files is discussed in depth in the manual. Here we briefly recall the basic aspects.
