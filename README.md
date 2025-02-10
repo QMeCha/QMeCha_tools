@@ -10,9 +10,14 @@
    Matteo Barborini (matteo.barborini.at.gmail.com)
 ```
 
-### Basis sets and the pseudopotentials in QMeCha format.
+### Basis sets and pseudopotentials in QMeCha format.
 
 The organization of the files is discussed in depth in the manual. Here we briefly recall the basic aspects.
+The Basis sets and pseudopotentials contained in this repository are adjusted from the repository of [M. Burkatzki, C. Filippi and M. Dolg](http://burkatzki.com/pseudos/index.2.html) and from the [Pseudopotential Library](https://pseudopotentiallibrary.org/).
+
+Up till now the repository contains the BFD[^1], ccECP[^2] and eCEPP[^3] pseudopotentials with the corresponding basis sets.
+
+
 
 ### Basis sets format.
 
@@ -107,3 +112,14 @@ Afterwards each term of the pseudopotential is listed without separations:
 On each line we have the exponent of the polinomial, the exponential factor and the coefficient of the expansion.
 
 In this case the first three terms are associated to the local part of the pseudopotential, while the last row is related to the first non-local term.
+
+#### References
+
+[^1]: (a) M. Burkatzki, C. Filippi, M. Dolg
+Energy-consistent pseudopotentials for QMC calculations,
+J. Chem. Phys. 126, 234105 (2007) (b) M. Burkatzki, C. Filippi, M. Dolg Energy-consistent small-core pseudopotentials for 3d-transition metals adapted to quantum Monte Carlo calculations,
+J. Chem. Phys. 129, 164115 (2008) 
+
+[^2]: (a) M. Chandler Bennett, Cody A. Melton, Abdulgani Annaberdiyev, Guangming Wang, Luke Shulenburger, Lubos Mitas; *A new generation of effective core potentials for correlated calculations.* J. Chem. Phys. (2017); 147 (22): 224106. https://doi.org/10.1063/1.4995643 (b) M. Chandler Bennett, Guangming Wang, Abdulgani Annaberdiyev, Cody A. Melton, Luke Shulenburger, Lubos Mitas; *A new generation of effective core potentials from correlated calculations: 2nd row elements.* J. Chem. Phys. (2018); 149 (10): 104108. https://doi.org/10.1063/1.5038135 (c) Guangming Wang, Abdulgani Annaberdiyev, Cody A. Melton, M. Chandler Bennett, Luke Shulenburger, Lubos Mitas; A new generation of effective core potentials from correlated calculations: 4s and 4p main group elements and first row additions. J. Chem. Phys. 14 October 2019; 151 (14): 144110. https://doi.org/10.1063/1.5121006 (d) Guangming Wang, Benjamin Kincaid, Haihan Zhou, Abdulgani Annaberdiyev, M. Chandler Bennett, Jaron T. Krogel, Lubos Mitas; A new generation of effective core potentials from correlated and spin–orbit calculations: Selected heavy elements. J. Chem. Phys. 7 August 2022; 157 (5): 054101. https://doi.org/10.1063/5.0087300 (e) Haihan Zhou, Benjamin Kincaid, Guangming Wang, Abdulgani Annaberdiyev, Panchapakesan Ganesh, Lubos Mitas; A new generation of effective core potentials: Selected lanthanides and heavy elements. J. Chem. Phys. 28 February 2024; 160 (8): 084302. https://doi.org/10.1063/5.0180057
+
+[^3] J. R. Trail, R. J. Needs; Shape and energy consistent pseudopotentials for correlated electron systems. J. Chem. Phys. 28 May 2017; 146 (20): 204107. https://doi.org/10.1063/1.4984046
