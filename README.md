@@ -7,7 +7,7 @@
    | |__| |_ | |   | || ____|| |_____ | | | |/ ___ |        
    \________)|_|   |_||_____)\_______)|_| |_|\_____|        
                                                     
-   Matteo Barborini (matteo.barborini.at.gmail.com)
+   Dr. Matteo Barborini (matteo.barborini.at.gmail.com)
 ```
 
 ### Basis sets and pseudopotentials in QMeCha format.
@@ -115,12 +115,14 @@ In this case the first three terms are associated to the local part of the pseud
 
 #### References
 
-[^1]: (a) M. Burkatzki, C. Filippi, M. Dolg
-Energy-consistent pseudopotentials for QMC calculations,
-J. Chem. Phys. 126, 234105 (2007) (b) M. Burkatzki, C. Filippi, M. Dolg Energy-consistent small-core pseudopotentials for 3d-transition metals adapted to quantum Monte Carlo calculations,
-J. Chem. Phys. 129, 164115 (2008) 
+[^1]: (a) M. Burkatzki, C. Filippi, M. Dolg *Energy-consistent pseudopotentials for QMC calculations.* [*J. Chem. Phys.* **126**, 234105 (2007)](https://doi.org/10.1063/1.2741534) (b) M. Burkatzki, C. Filippi, M. Dolg *Energy-consistent small-core pseudopotentials for 3d-transition metals adapted to quantum Monte Carlo calculations.* [*J. Chem. Phys.* **129**, 164115 (2008)](https://doi.org/10.1063/1.2987872) 
 
-[^2]: (a) M. Chandler Bennett, Cody A. Melton, Abdulgani Annaberdiyev, Guangming Wang, Luke Shulenburger, Lubos Mitas; *A new generation of effective core potentials for correlated calculations.* J. Chem. Phys. (2017); 147 (22): 224106. https://doi.org/10.1063/1.4995643 (b) M. Chandler Bennett, Guangming Wang, Abdulgani Annaberdiyev, Cody A. Melton, Luke Shulenburger, Lubos Mitas; *A new generation of effective core potentials from correlated calculations: 2nd row elements.* J. Chem. Phys. (2018); 149 (10): 104108. https://doi.org/10.1063/1.5038135 (c) Guangming Wang, Abdulgani Annaberdiyev, Cody A. Melton, M. Chandler Bennett, Luke Shulenburger, Lubos Mitas; A new generation of effective core potentials from correlated calculations: 4s and 4p main group elements and first row additions. J. Chem. Phys. 14 October 2019; 151 (14): 144110. https://doi.org/10.1063/1.5121006 (d) Guangming Wang, Benjamin Kincaid, Haihan Zhou, Abdulgani Annaberdiyev, M. Chandler Bennett, Jaron T. Krogel, Lubos Mitas; A new generation of effective core potentials from correlated and spin–orbit calculations: Selected heavy elements. J. Chem. Phys. 7 August 2022; 157 (5): 054101. https://doi.org/10.1063/5.0087300 (e) Haihan Zhou, Benjamin Kincaid, Guangming Wang, Abdulgani Annaberdiyev, Panchapakesan Ganesh, Lubos Mitas; A new generation of effective core potentials: Selected lanthanides and heavy elements. J. Chem. Phys. 28 February 2024; 160 (8): 084302. https://doi.org/10.1063/5.0180057
+[^2]: 
+(a) M. C. Bennett, C. A. Melton, A. Annaberdiyev, G. Wang, L. Shulenburger, L. Mitas *A new generation of effective core potentials for correlated calculations.* [*J. Chem. Phys.* **147 (22)**, 224106 (2017)](https://doi.org/10.1063/1.4995643) 
+(b) M. C. Bennett, G. Wang, A. Annaberdiyev, C. A. Melton, L. Shulenburger, L. Mitas *A new generation of effective core potentials from correlated calculations: 2nd row elements.* [*J. Chem. Phys.* **149 (10)**, 104108 (2018)](https://doi.org/10.1063/1.5038135)
+(c) G. Wang, A. Annaberdiyev, C. A. Melton, M. C. Bennett, L. Shulenburger, L. Mitas *A new generation of effective core potentials from correlated calculations: 4s and 4p main group elements and first row additions.* [*J. Chem. Phys.* **151 (14)**, 144110 (2019)](https://doi.org/10.1063/1.5121006) 
+(d) G. Wang, B. Kincaid, H. Wang, A. Annaberdiyev, M. C. Bennett, J. T. Krogel, L. Mitas *A new generation of effective core potentials from correlated and spin–orbit calculations: Selected heavy elements.* [*J. Chem. Phys.* **157 (5)**, 054101 (2022)](https://doi.org/10.1063/5.0087300) 
+(e) H. Zhou, B. Kincaid, G. Wang, A. Annaberdiyev, P. Ganesh, L. Mitas *A new generation of effective core potentials: Selected lanthanides and heavy elements.* [*J. Chem. Phys.* **160 (8)**, 084302 (2024)](https://doi.org/10.1063/5.0180057)
 
-[^3]: J. R. Trail, R. J. Needs; Shape and energy consistent pseudopotentials for correlated electron systems. J. Chem. Phys. 28 May 2017; 146 (20): 204107. https://doi.org/10.1063/1.4984046
+[^3]: J. R. Trail, R. J. Needs *Shape and energy consistent pseudopotentials for correlated electron systems.* [*J. Chem. Phys.* **146 (20)**, 204107 (2017)](https://doi.org/10.1063/1.4984046)
 
