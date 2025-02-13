@@ -1,14 +1,12 @@
 
-```
-    _______   _______         _______  _                    
-   (_______) (_______)       (_______)| |                   
-    _    _    _  _  _  _____  _       | |__   _____         
-   | |  | |  | ||_|| || ___ || |      |  _ \ (____ |        
-   | |__| |_ | |   | || ____|| |_____ | | | |/ ___ |        
-   \________)|_|   |_||_____)\_______)|_| |_|\_____|        
-                                                    
-   Dr. Matteo Barborini (matteo.barborini.at.gmail.com)
-```
+<img src="logo_long_bright.png" >
+
+\
+Quantum MeCha (QMeCha)[^a] is a quantum Monte Carlo packate started in 2017 by [Dr. Matteo Barborini](https://www.uni.lu/fstm-en/people/matteo-barborini/) a Research Scientist at the [HPC Platform](https://www.uni.lu/research-en/core-facilities/hpc/) of the [University of Luxembourg](https://www.uni.lu), that is also the main developer of the code till now.
+
+This repository contains some of the tools to initialize the molecular system file, the basis set and the pseudopotential.
+
+[^a]: From [Wikipedia](https://en.wikipedia.org/wiki/Mecha): *``In science fiction, mecha (Japanese: メカ, Hepburn: meka) or mechs are giant robots or machines, typically depicted as piloted, humanoid walking vehicles. The term was first used in Japanese after shortening the English loanword 'mechanism' (メカニズム, mekanizumu) or 'mechanical' (メカニカル, mekanikaru), but the meaning in Japanese is more inclusive, and 'robot' (ロボット, robotto) or 'giant robot' is the narrower term.''* 
 
 ### Basis sets and pseudopotentials in QMeCha format.
 
@@ -16,8 +14,6 @@ The organization of the files is discussed in depth in the manual. Here we brief
 The Basis sets and pseudopotentials contained in this repository are adjusted from the repository of [M. Burkatzki, C. Filippi and M. Dolg](http://burkatzki.com/pseudos/index.2.html) and from the [Pseudopotential Library](https://pseudopotentiallibrary.org/).
 
 Up till now the repository contains the BFD[^1], ccECP[^2] and eCEPP[^3] pseudopotentials with the corresponding basis sets.
-
-
 
 ### Basis sets format.
 
