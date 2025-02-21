@@ -4,6 +4,12 @@ import sys
 import os
 import numpy as np
 
+# Set tools dir
+def setToolsDir():
+    global qmecha_dir
+    qmecha_dir=str(os.path.dirname(os.path.abspath(__file__)))+"/../"
+    os.putenv("QMECHA_TOOLS", qmecha_dir)
+
 # Check tools directory Print input parameters
 def checkToolsDir():
     global qmecha_dir
@@ -117,7 +123,7 @@ def printPseudo(atom,pseudoname,outFile):
         print(" ERROR!!! Pseudo potential "+pseudoname+" for atom "+atom+" is not present")
 
 
-# Read pseudo parameters.
+# Read QMeChq XYZ file
 def readMolFile():
     global atom_names, n_at, n_pseudo
     try:
