@@ -7,6 +7,43 @@ The defaults describe a neutral electronic system in
 a singlet spin state.
 """
 import sys
+import os
+
+# Load default variables
+def loadDefaultVariables():
+    global n_el
+    global n_po 
+    global spin_e 
+    global spin_p
+    global m_p
+    global m_e 
+    global chrg 
+    global mult 
+    global xyzFileName
+    global systemName
+    global atom_names
+    global atom_x, atom_y, atom_z
+    global print_spin_e, print_spin_p, print_n_po, print_n_el
+    global pseudo
+    n_el = int(0)
+    n_po = int(0)
+    spin_e = float(0.0)
+    spin_p = float(0.0)
+    m_p = float(1.0)
+    m_e = float(1.0)
+    chrg = int(0)
+    mult = int(1)
+    xyzFileName="empty"
+    systemName="empty"
+    atom_names=[]
+    atom_x=[]
+    atom_y=[]
+    atom_z=[]
+    print_spin_e=False 
+    print_spin_p=False 
+    print_n_el=False
+    print_n_po=False
+    pseudo=False
 
 # Print molecular QMeCha file
 def printMolFile():
@@ -36,9 +73,9 @@ def printMolFile():
         molFilePointer.write("/\n")
         for i in range(n_at) :
             if (pseudo):
-                molFilePointer.write("*"+str(atom_names[i])+" "+str(atom_x[i])+" "+str(atom_y[i])+" "+str(atom_z[i])+'\n')
+                molFilePointer.write('*{} {} {} {}\n'.format(atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
             else:
-                molFilePointer.write(str(atom_names[i])+" "+str(atom_x[i])+" "+str(atom_y[i])+" "+str(atom_z[i])+'\n')
+                molFilePointer.write('{} {} {} {}\n'.format(atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
         molFilePointer.close()
     else:
         print("WARNING!!! Outfile is already present, please remove it or rename it.") 
@@ -78,7 +115,7 @@ def printInputParameters():
     print(" pseudo  = ",pseudo)
     print()
 
-# Print commands 
+# Print Help info 
 def printHelp():
     print()
     print(" Required input arguments:")
@@ -100,11 +137,8 @@ def printHelp():
     print("   -pseudo Add pseudo to all atoms")
     print()
 
-# Main function
-def main():
-    print(" =======================================================================")
-    print(" =           XYZ file converter to Molecular file in QMeCha            =")
-    print(" =======================================================================")
+# Read input arguments
+def readArguments():
     global n_el
     global n_po 
     global spin_e 
@@ -115,72 +149,57 @@ def main():
     global mult 
     global xyzFileName
     global systemName
-    global atom_names
-    global atom_x
-    global atom_y
-    global atom_z
     global print_spin_e, print_spin_p, print_n_po, print_n_el
     global pseudo
-    n_el = int(0)
-    n_po = int(0)
-    spin_e = float(0.0)
-    spin_p = float(0.0)
-    m_p = float(1.0)
-    m_e = float(1.0)
-    chrg = int(0)
-    mult = int(1)
-    xyzFileName="empty"
-    systemName="empty"
-    atom_names=[]
-    atom_x=[]
-    atom_y=[]
-    atom_z=[]
-    print_spin_e=False 
-    print_spin_p=False 
-    print_n_el=False
-    print_n_po=False
-    pseudo=False
+    for i in range(1,len(sys.argv)) :
+        if ( sys.argv[i] == '-n_el'):
+            n_el = int(sys.argv[i+1])
+            print_n_el=True
+        if ( sys.argv[i] == '-n_po'):
+            n_po = int(sys.argv[i+1])
+            print_n_po=True
+        if ( sys.argv[i] == '-spin_e'):
+            spin_e = float(sys.argv[i+1])
+            print_spin_e=True
+        if ( sys.argv[i] == '-spin_p'):
+            spin_p = float(sys.argv[i+1])
+            print_spin_p=True
+        if ( sys.argv[i] == '-m_p'):
+            m_p = float(sys.argv[i+1])
+        if ( sys.argv[i] == '-m_e'):
+            m_e = float(sys.argv[i+1])
+        if ( sys.argv[i] == '-chrg'):
+            chrg = int(sys.argv[i+1])
+        if ( sys.argv[i] == '-mult'):
+            mult = int(sys.argv[i+1])
+        if ( sys.argv[i] == '-xyz'):
+            xyzFileName = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-sys'):
+            systemName = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-pseudo'):
+            pseudo=True
+
+
+if __name__ == "__main__":
+    print(" =======================================================================")
+    print(" =           XYZ file converter to Molecular file in QMeCha            =")
+    print(" =======================================================================")
+    loadDefaultVariables()
     if (len(sys.argv) == 1 ) :
         printHelp()
         exit()
     else:
-        for i in range(1,len(sys.argv)) :
-            if ( sys.argv[i] == '-n_el'):
-                n_el = int(sys.argv[i+1])
-                print_n_el=True
-            if ( sys.argv[i] == '-n_po'):
-                n_po = int(sys.argv[i+1])
-                print_n_po=True
-            if ( sys.argv[i] == '-spin_e'):
-                spin_e = float(sys.argv[i+1])
-                print_spin_e=True
-            if ( sys.argv[i] == '-spin_p'):
-                spin_p = float(sys.argv[i+1])
-                print_spin_p=True
-            if ( sys.argv[i] == '-m_p'):
-                m_p = float(sys.argv[i+1])
-            if ( sys.argv[i] == '-m_e'):
-                m_e = float(sys.argv[i+1])
-            if ( sys.argv[i] == '-chrg'):
-                chrg = int(sys.argv[i+1])
-            if ( sys.argv[i] == '-mult'):
-                mult = int(sys.argv[i+1])
-            if ( sys.argv[i] == '-xyz'):
-                xyzFileName = str(sys.argv[i+1])
-            if ( sys.argv[i] == '-sys'):
-                systemName = str(sys.argv[i+1])
-            if ( sys.argv[i] == '-pseudo'):
-                pseudo=True
+        print("hello")
+        readArguments()
+    
+    printInputParameters()
 
-        printInputParameters()
-
-        if (systemName=="empty" or xyzFileName == 'empty' ):
-            print(" ERROR!!! Input or output file not specified.") 
-            
-        readXYZFile()
-        printMolFile()
+    if (systemName=="empty" or xyzFileName == 'empty' ):
+        print(" ERROR!!! Input or output file not specified.") 
+        printHelp()
         exit()
+            
+    readXYZFile()
+    printMolFile()
 
-if __name__ == "__main__":
-    main()
     print(" =======================================================================")
