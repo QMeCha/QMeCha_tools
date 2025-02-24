@@ -30,14 +30,14 @@ def loadDefaultVariables():
     global atomsDataBase,xyzFileName
     global one_body_type, two_body_type, cusps_order
     global inputParamsFile, wavefunction
-    global printInputParFlag
+    global printInputParFlag, basissetFileName
     n_at = int(0)
     one_body_type = int(1)
     two_body_type = int(2)
     cusps_order = int(5)
-    n_at = int(0)
     atom_names = []
-    inputParamsFile = 'empty'
+    inputParamsFile = "empty"
+    basissetFileName = "empty"
     xyzFileName = "empty"
     wavefunction = str('rsd')
     printInputParFlag = False
@@ -116,8 +116,8 @@ def printHelp():
     print("   -prnt    (To print basis set defaults in default.inp)")
     print()
 
-# Print input parameters
-def printInputParameters():
+# Print input Arguments
+def printInputArguments():
     print()
     print(" Required input arguments:")
     print()
@@ -125,6 +125,7 @@ def printInputParameters():
     print()
     print(" Optional inputs:")
     print()
+    print(" BasFile = ",basissetFileName)
     print(" wf      = ",wavefunction)
     print(" oneb    = ",one_body_type)
     print(" twob    = ",two_body_type)
@@ -132,31 +133,31 @@ def printInputParameters():
     print(" ipar    = ",inputParamsFile)
     print()
 
-def readArguments():
-    global wavefunction
-    global xyzFileName
-    global one_body_type
-    global two_body_type
-    global inputParamsFile
-    global cusps_order
-    global printInputParFlag
-    for i in range(1,len(sys.argv)) :
-        if ( sys.argv[i] == '-oneb'):
-            one_body_type = int(sys.argv[i+1])
-        if ( sys.argv[i] == '-twob'):
-            two_body_type = int(sys.argv[i+1])
-        if ( sys.argv[i] == '-CspO'):
-            cusps_order=int(sys.argv[i+1])
-        if ( sys.argv[i] == '-xyz'):
-            xyzFileName = str(sys.argv[i+1])
-        if ( sys.argv[i] == '-wf'):
-            wavefunction = str(sys.argv[i+1])
-        if ( sys.argv[i] == '-ipar'):
-            inputParamsFile = str(sys.argv[i+1])
-        if ( sys.argv[i] == '-prnt'):
-            printInputParFlag = True
+# Print Params file for basis set
+def printInputParamsFile():
+    pointerInputParamsFile = open(inputParamsFile, "w" )
+    for i in atomsDataBase :
+        pointerInputParamsFile.write(i[1]+" "+i[2]+" "+i[3]+" "+i[4]+" "+i[5]+"\n")
+    pointerInputParamsFile.close()
 
-# Read QMeChq XYZ file
+# Read Params file for basis set
+def readInputParamsFile():
+    global atomsDataBase
+    pointerInputParamsFile = open(inputParamsFile, "r" )
+    inputParamsFileLines = pointerInputParamsFile.readlines()
+    for line in inputParamsFileLines :
+        if (len(line.split()) <=4 ) :
+            break
+        for i in atomsDataBase :
+            if ( i[1] == line.split()[0] ) :
+                i[2] = line.split()[1]
+                i[3] = line.split()[2]
+                i[4] = line.split()[3]
+                i[5] = line.split()[4]
+                break
+    pointerInputParamsFile.close()
+
+# Read QMeCha XYZ file
 def readMolFile():
     global atom_names, n_at, n_pseudo
     try:
@@ -174,12 +175,9 @@ def readMolFile():
         for line_num in range(read_from,read_from+n_at) :
             atom_names.append(molFileLines[line_num].split()[0])
         atom_names = list( dict.fromkeys(atom_names) )
-        #Remove non pseudo atoms.
         atom_names =[ atom for atom in atom_names if '*' in atom ]
-
         for line_num in range(len(atom_names)) :
             atom_names[line_num]=atom_names[line_num].replace('*', '')
-
         n_pseudo = len(atom_names)
         molFile.close()
     except:
@@ -187,47 +185,57 @@ def readMolFile():
         printHelp()
         exit()
 
-def printccECPBasisset(atom,basistype,eletype,outFile,n_jorbs):
-    bssFile =open(qmecha_dir+'/basissets/pseudo/'+atom+'.ccECP_'+basistype+'.qmecha', 'r')
-    bssFileLines=bssFile.readlines()
-    outFile.write("# Basis set "+basistype+" "+eletype+"\n")
-    if (eletype == 'AE') :
-        outFile.write( bssFileLines[0].split()[0]+" "+bssFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
+# Read arguments
+def readArguments():
+    global wavefunction
+    global xyzFileName
+    global one_body_type
+    global two_body_type
+    global cusps_order
+    global inputParamsFile
+    global printInputParFlag
+    global basissetFileName
+    for i in range(1,len(sys.argv)) :
+        if ( sys.argv[i] == '-oneb'):
+            one_body_type = int(sys.argv[i+1])
+        if ( sys.argv[i] == '-twob'):
+            two_body_type = int(sys.argv[i+1])
+        if ( sys.argv[i] == '-CspO'):
+            cusps_order=int(sys.argv[i+1])
+        if ( sys.argv[i] == '-xyz'):
+            xyzFileName = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-wf'):
+            wavefunction = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-ipar'):
+            inputParamsFile = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-bas'):
+            basissetFileName = str(sys.argv[i+1])
+        if ( sys.argv[i] == '-prnt'):
+            printInputParFlag = True
+    if (inputParamsFile == 'empty'):
+        inputParamsFile="param.inp"
+        printInputParamsFile()
+    if (basissetFileName=='empty'):
+        #basissetFileName=xyzFileName.removesuffix('.xyz')+'.bas'
+        basissetFileName=xyzFileName.replace('.xyz','.bas')
+
+# Print atomic basis set
+def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
+    atomicBasFile =open(qmecha_dir+'/basissets/'+pseudotype+'/'+atom+'.'+basistype+'.qmecha', 'r')
+    atomicBasFileLines=atomicBasFile.readlines()
+    pointerBasissetFile.write("# Basis set "+basistype+" "+pseudotype+"\n")
+    if (pseudotype == 'AE') :
+        pointerBasissetFile.write( atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
     else:
-        outFile.write( '*'+bssFileLines[0].split()[0]+" "+bssFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
+        pointerBasissetFile.write( '*'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
+    for line in range(1,len(atomicBasFileLines)) :
+        pointerBasissetFile.write(str(atomicBasFileLines[line]))
+    atomicBasFile.close()
 
-    for line in range(1,len(bssFileLines)) :
-        outFile.write(str(bssFileLines[line]))
-    bssFile.close()
 
-def countJastrowOrbitals(jorbs):
-    return int(len(jorbs)/2)
-
-def readBasisInfo(basFileName,atomsDataBase):
-    basFile = open(basFileName, "r" )
-    basFileLines = basFile.readlines()
-    for line in basFileLines :
-        if (len(line.split()) <=4 ) :
-            break
-        for i in atomsDataBase :
-            if ( i[1] == line.split()[0] ) :
-                i[2] = line.split()[1]
-                i[3] = line.split()[2]
-                i[4] = line.split()[3]
-                i[5] = line.split()[4]
-                break
-    basFile.close()
-    return atomsDataBase
-
-# Print basis set parameters 
-def printBasisSetParametersInfo(FileName):
-    basFile = open(FileName, "w" )
-    for i in atomsDataBase :
-        basFile.write(i[1]+" "+i[2]+" "+i[3]+" "+i[4]+" "+i[5]+"\n")
-    basFile.close()
-
-def printJastrow(chrg,jorbs,jtype,outFile):
-    outFile.write("# Jastrow basis set \n")
+# Build and print Atomic Jastrow factor
+def printAtomicJastrow(jorbs,jtype):
+    pointerBasissetFile.write("# Jastrow basis set \n")
     # Count primitive orbital types
     n_s = 0
     n_p = 0
@@ -245,7 +253,6 @@ def printJastrow(chrg,jorbs,jtype,outFile):
             n_f = n_f + int(jorbs[k1])
         if (jorbs[k1+1].upper()=='G' ) :
             n_g = n_g + int(jorbs[k1])
-
     # generate exponentials
     z_s = []
     z_p = []
@@ -267,53 +274,54 @@ def printJastrow(chrg,jorbs,jtype,outFile):
     if ( n_g > 0) :
         for k1 in range(n_g) :
             z_g.append(1.0+(1.0/np.sqrt(float(n_g)))*float(n_g-k1-1)**(1.7))
-
     # Print file
     for k1 in range(0,len(jorbs),2) :
         n_orbs=int(jorbs[k1])
         l_orbs=jorbs[k1+1].upper()
-        outFile.write(" "+l_orbs+str(" %3d" % (n_orbs))+"\n")
+        pointerBasissetFile.write(" "+l_orbs+str(" %3d" % (n_orbs))+"\n")
         if (l_orbs=='S' ) :
             for k2 in range(n_orbs) :
                 c=1.000-float(n_orbs-k2-1)/float(n_orbs)
                 line=str(" %15.7F %10.7F" % (float(z_s[0]),float(c)))
-                outFile.write(line+" 1"+jtype+"\n")
+                pointerBasissetFile.write(line+" 1"+jtype+"\n")
                 del z_s[0]
         if (l_orbs=='P' ) :
             for k2 in range(n_orbs) :
                 c=1.000-float(n_orbs-k2-1)/float(n_orbs)
                 line=str(" %15.7F %10.7F" % (float(z_p[0]),float(c)))
-                outFile.write(line+" 1"+jtype+"\n")
+                pointerBasissetFile.write(line+" 1"+jtype+"\n")
                 del z_p[0]
         if (l_orbs=='D' ) :
             for k2 in range(n_orbs) :
                 c=1.000-float(n_orbs-k2-1)/float(n_orbs)
                 line=str(" %15.7F %10.7F" % (float(z_d[0]),float(c)))
-                outFile.write(line+" 1"+jtype+"\n")
+                pointerBasissetFile.write(line+" 1"+jtype+"\n")
                 del z_d[0]
         if (l_orbs=='F' ) :
             for k2 in range(n_orbs) :
                 c=1.000-float(n_orbs-k2-1)/float(n_orbs)
                 line=str(" %15.7F %10.7F" % (float(z_f[0]),float(c)))
-                outFile.write(line+" 1"+jtype+"\n")
+                pointerBasissetFile.write(line+" 1"+jtype+"\n")
                 del z_f[0]
         if (l_orbs=='G' ) :
             for k2 in range(n_orbs) :
                 c=1.000-float(n_orbs-k2-1)/float(n_orbs)
                 line=str(" %15.7F %10.7F" % (float(z_g[0]),float(c)))
-                outFile.write(line+" 1"+jtype+"\n")
+                pointerBasissetFile.write(line+" 1"+jtype+"\n")
                 del z_g[0]
 
-def printBasisFile(atom_names,atomsDataBase,bssOutFileName):
-    bssOutFile = open( bssOutFileName, "w" )
-    bssOutFile.write("# Wave function \n")
-    bssOutFile.write(" {} \n".format(wavefunction))
-    bssOutFile.write("# One body \n")
-    bssOutFile.write("  {}  {} \n".format(one_body_type,cusps_order))
-    bssOutFile.write("# Two body \n")
-    bssOutFile.write("  {}  {} \n".format(two_body_type,cusps_order))
+# Print Basis set file
+def printBasisFile():
+    global pointerBasissetFile
+    pointerBasissetFile = open( basissetFileName, "w" )
+    pointerBasissetFile.write("# Wave function \n")
+    pointerBasissetFile.write(" {} \n".format(wavefunction))
+    pointerBasissetFile.write("# One body \n")
+    pointerBasissetFile.write("  %2i  %2i \n" % (one_body_type,cusps_order))
+    pointerBasissetFile.write("# Two body \n")
+    pointerBasissetFile.write("  %2i  %2i \n" % (two_body_type,cusps_order))
     basistype = ""
-    eletype = ""
+    pseudotype = ""
     jastroworbs = ""
     jastrowtype = ""
     n_jorbs = 0
@@ -321,15 +329,14 @@ def printBasisFile(atom_names,atomsDataBase,bssOutFileName):
         for j in range(len(atomsDataBase)) :
             if i == atomsDataBase[j][1] :
                 basistype   = atomsDataBase[j][2]
-                eletype     = atomsDataBase[j][3]
+                pseudotype  = atomsDataBase[j][3]
                 jastroworbs = atomsDataBase[j][4]
                 jastrowtype = atomsDataBase[j][5]
                 break
-
-        n_jorbs=countJastrowOrbitals(jastroworbs)
-        printccECPBasisset(i,basistype,eletype,bssOutFile,n_jorbs)
-        printJastrow(j+1,jastroworbs,jastrowtype,bssOutFile)
-    bssOutFile.close()
+        n_jorbs=int(len(jastroworbs)/2) 
+        printAtomicBasisset(i,basistype,pseudotype,n_jorbs)
+        printAtomicJastrow(jastroworbs,jastrowtype)
+    pointerBasissetFile.close()
 
 if __name__ == "__main__":
     print(" =======================================================================")
@@ -343,13 +350,18 @@ if __name__ == "__main__":
     else:
         readArguments()
     if (printInputParFlag): 
-        printBasisSetParametersInfo("param.inp")
+        printInputParamsFile()
         print(" Printing default parameter file param.inp")
         print(" =======================================================================")
         exit()
-    if ( xyzFileName == 'empty') :
+    if ( xyzFileName == 'empty'):
         print(" Missing molecular QMeCha file in input")
         printHelp()
-    printInputParameters()
+        print(" =======================================================================")
+        exit()
+    printInputArguments()
+    readMolFile()
+    readInputParamsFile()
+    printBasisFile()
 
     print(" =======================================================================")

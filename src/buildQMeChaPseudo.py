@@ -160,7 +160,7 @@ if __name__ == "__main__":
     print(" ===================== Pseudo generator for QMeCha =====================")
     print(" =======================================================================")
     loadDefaultVariables()
-    checkToolsDir()
+    setToolsDir()
     if (len(sys.argv) == 1 ) :
         printHelp()
         exit()
