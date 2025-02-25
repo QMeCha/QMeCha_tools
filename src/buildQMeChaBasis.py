@@ -42,61 +42,61 @@ def loadDefaultVariables():
     wavefunction = str('rsd')
     printInputParFlag = False
     atomsDataBase = [
-    ['Hydrogen','H','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Helium','He','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Lithium','Li','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Beryllium','Be','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Boron','B','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Carbon','C','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Nitrogen','N','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Oxygen','O','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Fluorine','F','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Neon','Ne','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Sodium','Na','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Magnesium','Mg','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Aluminum','Al','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Silicon','Si','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Phosphorous','P','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Sulfur','S','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Chlorine','Cl','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Argon','Ar','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Potassium','K','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Calcium','Ca','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Scandium','Sc','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Titanium','Ti','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Vanadium','V','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Chromium','Cr','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Manganese','Mn','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Iron','Fe','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Cobalt','Co','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Nickel','Ni','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Copper','Cu','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Zinc','Zn','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Gallium','Ga','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Germanium','Ge','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Arsenic','As','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Selenium','Se','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Bromine','Br','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Krypton','Kr','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Rubidium','Rb','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Strontium','Sr','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Yttrium','Y','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Zirconium','Zr','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Niobium','Nb','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Molybdenum','Mo','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Technetium','Tc','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Ruthenium','Ru','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Rhodium','Rh','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Palladium','Pd','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Silver','Ag','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Cadmium','Cd','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Indium','In','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Tin','Sn','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Antimony','Sb','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Tellurium','Te','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Iodine','I','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Xenon','Xe','cc-pVDZ','ccECP','3s2p1d','G'],
-    ['Cesium','Cs','cc-pVDZ','ccECP','3s2p1d','G']
+    ['Hydrogen','H','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Helium','He','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Lithium','Li','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Beryllium','Be','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Boron','B','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Carbon','C','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Nitrogen','N','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Oxygen','O','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Fluorine','F','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Neon','Ne','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Sodium','Na','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Magnesium','Mg','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Aluminum','Al','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Silicon','Si','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Phosphorous','P','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Sulfur','S','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Chlorine','Cl','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Argon','Ar','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Potassium','K','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Calcium','Ca','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Scandium','Sc','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Titanium','Ti','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Vanadium','V','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Chromium','Cr','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Manganese','Mn','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Iron','Fe','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Cobalt','Co','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Nickel','Ni','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Copper','Cu','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Zinc','Zn','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Gallium','Ga','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Germanium','Ge','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Arsenic','As','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Selenium','Se','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Bromine','Br','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Krypton','Kr','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Rubidium','Rb','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Strontium','Sr','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Yttrium','Y','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Zirconium','Zr','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Niobium','Nb','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Molybdenum','Mo','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Technetium','Tc','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Ruthenium','Ru','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Rhodium','Rh','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Palladium','Pd','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Silver','Ag','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Cadmium','Cd','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Indium','In','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Tin','Sn','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Antimony','Sb','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Tellurium','Te','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Iodine','I','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Xenon','Xe','cc-pVDZ','ccECP','3sG2pG1dG'],
+    ['Cesium','Cs','cc-pVDZ','ccECP','3sG2pG1dG']
     ]
 
 # Print Help info 
@@ -137,7 +137,7 @@ def printInputArguments():
 def printInputParamsFile():
     pointerInputParamsFile = open(inputParamsFile, "w" )
     for i in atomsDataBase :
-        pointerInputParamsFile.write(i[1]+" "+i[2]+" "+i[3]+" "+i[4]+" "+i[5]+"\n")
+        pointerInputParamsFile.write(i[1]+" "+i[2]+" "+i[3]+" "+i[4]+"\n")
     pointerInputParamsFile.close()
 
 # Read Params file for basis set
@@ -146,14 +146,13 @@ def readInputParamsFile():
     pointerInputParamsFile = open(inputParamsFile, "r" )
     inputParamsFileLines = pointerInputParamsFile.readlines()
     for line in inputParamsFileLines :
-        if (len(line.split()) <=4 ) :
+        if (len(line.split()) <=3 ) :
             break
         for i in atomsDataBase :
             if ( i[1] == line.split()[0] ) :
                 i[2] = line.split()[1]
                 i[3] = line.split()[2]
                 i[4] = line.split()[3]
-                i[5] = line.split()[4]
                 break
     pointerInputParamsFile.close()
 
@@ -212,9 +211,6 @@ def readArguments():
             basissetFileName = str(sys.argv[i+1])
         if ( sys.argv[i] == '-prnt'):
             printInputParFlag = True
-    if (inputParamsFile == 'empty'):
-        inputParamsFile="param.inp"
-        printInputParamsFile()
     if (basissetFileName=='empty'):
         #basissetFileName=xyzFileName.removesuffix('.xyz')+'.bas'
         basissetFileName=xyzFileName.replace('.xyz','.bas')
@@ -234,81 +230,126 @@ def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
 
 
 # Build and print Atomic Jastrow factor
-def printAtomicJastrow(jorbs,jtype):
+def printAtomicJastrow(jorbs):
     pointerBasissetFile.write("# Jastrow basis set \n")
-    # Count primitive orbital types
-    n_s = 0
-    n_p = 0
-    n_d = 0
-    n_f = 0
-    n_g = 0
-    for k1 in range(0,len(jorbs),2) :
-        if (jorbs[k1+1].upper()=='S' ) :
-            n_s = n_s + int(jorbs[k1])
-        if (jorbs[k1+1].upper()=='P' ) :
-            n_p = n_p + int(jorbs[k1])
-        if (jorbs[k1+1].upper()=='D' ) :
-            n_d = n_d + int(jorbs[k1])
-        if (jorbs[k1+1].upper()=='F' ) :
-            n_f = n_f + int(jorbs[k1])
-        if (jorbs[k1+1].upper()=='G' ) :
-            n_g = n_g + int(jorbs[k1])
+    orb_type_G = np.zeros(5,dtype=int)
+    orb_type_S = np.zeros(5,dtype=int)
+    orb_type_E = np.zeros(5,dtype=int)
+    orb_type_M = np.zeros(5,dtype=int)
+    for k1 in range(0,len(jorbs),3) :
+        if (jorbs[k1+2].upper()=='G' ) :
+            if (jorbs[k1+1].upper()=='S' ) :
+                orb_type_G[0] = orb_type_G[0] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='P' ) :
+                orb_type_G[1] = orb_type_G[1] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='D' ) :
+                orb_type_G[2] = orb_type_G[2] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='F' ) :
+                orb_type_G[3] = orb_type_G[3] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='G' ) :
+                orb_type_G[4] = orb_type_G[4] + int(jorbs[k1])
+        if (jorbs[k1+2].upper()=='S' ) :
+            if (jorbs[k1+1].upper()=='S' ) :
+                orb_type_S[0] = orb_type_S[0] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='P' ) :
+                orb_type_S[1] = orb_type_S[1] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='D' ) :
+                orb_type_S[2] = orb_type_S[2] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='F' ) :
+                orb_type_S[3] = orb_type_S[3] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='G' ) :
+                orb_type_S[4] = orb_type_S[4] + int(jorbs[k1])
+        if (jorbs[k1+2].upper()=='E' ) :
+            if (jorbs[k1+1].upper()=='S' ) :
+                orb_type_E[0] = orb_type_E[0] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='P' ) :
+                orb_type_E[1] = orb_type_E[1] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='D' ) :
+                orb_type_E[2] = orb_type_E[2] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='F' ) :
+                orb_type_E[3] = orb_type_E[3] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='G' ) :
+                orb_type_E[4] = orb_type_E[4] + int(jorbs[k1])
+        if (jorbs[k1+2].upper()=='M' ) :
+            if (jorbs[k1+1].upper()=='S' ) :
+                orb_type_M[0] = orb_type_M[0] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='P' ) :
+                orb_type_M[1] = orb_type_M[1] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='D' ) :
+                orb_type_M[2] = orb_type_M[2] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='F' ) :
+                orb_type_M[3] = orb_type_M[3] + int(jorbs[k1])
+            if (jorbs[k1+1].upper()=='G' ) :
+                orb_type_M[4] = orb_type_M[4] + int(jorbs[k1])
+
     # generate exponentials
+    exp_type_G = [[],[],[],[],[]]
+    exp_type_S = [[],[],[],[],[]]
+    exp_type_E = [[],[],[],[],[]]
+    exp_type_M = [[],[],[],[],[]]
     z_s = []
     z_p = []
     z_d = []
     z_f = []
     z_g = []
-    if ( n_s > 0) :
-        for k1 in range(n_s) :
-            z_s.append(0.1+(1.0/np.sqrt(float(n_s)))*float(n_s-k1-1)**(1.7))
-    if ( n_p > 0) :
-        for k1 in range(n_p) :
-            z_p.append(0.25+(1.0/np.sqrt(float(n_p)))*float(n_p-k1-1)**(1.7))
-    if ( n_d > 0) :
-        for k1 in range(n_d) :
-            z_d.append(0.5+(1.0/np.sqrt(float(n_d)))*float(n_d-k1-1)**(1.7))
-    if ( n_f > 0) :
-        for k1 in range(n_f) :
-            z_f.append(0.75+(1.0/np.sqrt(float(n_f)))*float(n_f-k1-1)**(1.7))
-    if ( n_g > 0) :
-        for k1 in range(n_g) :
-            z_g.append(1.0+(1.0/np.sqrt(float(n_g)))*float(n_g-k1-1)**(1.7))
-    # Print file
-    for k1 in range(0,len(jorbs),2) :
+    for k1 in range(5):
+        if   (k1 == 0):
+            a=0.1
+        elif (k1 == 1):
+            a=0.25
+        elif (k1 == 2):
+            a=0.50
+        elif (k1 == 3):
+            a=0.75
+        elif (k1 == 4):
+            a=1.00
+        if ( orb_type_G[k1] > 0):
+            for k2 in range(orb_type_G[k1]) :
+                exp_type_G[k1].append(a+(1.0/np.sqrt(float(orb_type_G[k1] )))*float(orb_type_G[k1] -k2-1)**(1.7))
+        if ( orb_type_S[k1] > 0):
+            for k2 in range(orb_type_S[k1]) :
+                exp_type_S[k1].append(a+(1.0/np.sqrt(float(orb_type_S[k1] )))*float(orb_type_S[k1] -k2-1)**(1.7))
+        if ( orb_type_E[k1] > 0):
+            for k2 in range(orb_type_E[k1]) :
+                exp_type_E[k1].append(a+(1.0/np.sqrt(float(orb_type_E[k1] )))*float(orb_type_E[k1] -k2-1)**(1.7))
+        if ( orb_type_M[k1] > 0):
+            for k2 in range(orb_type_M[k1]) :
+                exp_type_M[k1].append(a+(1.0/np.sqrt(float(orb_type_M[k1] )))*float(orb_type_M[k1] -k2-1)**(1.7))
+
+    # Print contracted orbitals to file
+    # Jorge suggests this could be a dictionary
+    for k1 in range(0,len(jorbs),3) :
         n_orbs=int(jorbs[k1])
-        l_orbs=jorbs[k1+1].upper()
-        pointerBasissetFile.write(" "+l_orbs+str(" %3d" % (n_orbs))+"\n")
-        if (l_orbs=='S' ) :
-            for k2 in range(n_orbs) :
-                c=1.000-float(n_orbs-k2-1)/float(n_orbs)
-                line=str(" %15.7F %10.7F" % (float(z_s[0]),float(c)))
-                pointerBasissetFile.write(line+" 1"+jtype+"\n")
-                del z_s[0]
-        if (l_orbs=='P' ) :
-            for k2 in range(n_orbs) :
-                c=1.000-float(n_orbs-k2-1)/float(n_orbs)
-                line=str(" %15.7F %10.7F" % (float(z_p[0]),float(c)))
-                pointerBasissetFile.write(line+" 1"+jtype+"\n")
-                del z_p[0]
-        if (l_orbs=='D' ) :
-            for k2 in range(n_orbs) :
-                c=1.000-float(n_orbs-k2-1)/float(n_orbs)
-                line=str(" %15.7F %10.7F" % (float(z_d[0]),float(c)))
-                pointerBasissetFile.write(line+" 1"+jtype+"\n")
-                del z_d[0]
-        if (l_orbs=='F' ) :
-            for k2 in range(n_orbs) :
-                c=1.000-float(n_orbs-k2-1)/float(n_orbs)
-                line=str(" %15.7F %10.7F" % (float(z_f[0]),float(c)))
-                pointerBasissetFile.write(line+" 1"+jtype+"\n")
-                del z_f[0]
-        if (l_orbs=='G' ) :
-            for k2 in range(n_orbs) :
-                c=1.000-float(n_orbs-k2-1)/float(n_orbs)
-                line=str(" %15.7F %10.7F" % (float(z_g[0]),float(c)))
-                pointerBasissetFile.write(line+" 1"+jtype+"\n")
-                del z_g[0]
+        if (jorbs[k1+1].upper()=='S' ) :
+            l_orbs= 0
+        elif (jorbs[k1+1].upper()=='P' ) :
+            l_orbs= 1
+        elif (jorbs[k1+1].upper()=='D' ) :
+            l_orbs= 2
+        elif (jorbs[k1+1].upper()=='F' ) :
+            l_orbs= 3
+        elif (jorbs[k1+1].upper()=='G' ) :
+            l_orbs= 4
+        orb_type=jorbs[k1+2].upper()
+        pointerBasissetFile.write(" "+jorbs[k1+1].upper()+str(" %3d" % (n_orbs))+"\n")
+        if ( orb_type == 'G'):
+            printOrbital(n_orbs,orb_type,exp_type_G[:][l_orbs])
+        elif (orb_type == 'S') :
+            printOrbital(n_orbs,orb_type,exp_type_S[:][l_orbs])
+        elif (orb_type == 'E' ) :
+            printOrbital(n_orbs,orb_type,exp_type_E[:][l_orbs])
+        elif (orb_type == 'M' ) :
+            printOrbital(n_orbs,orb_type,exp_type_M[:][l_orbs])
+
+# Print orbital 
+def printOrbital(n_orbs,orb_type,orb_z):
+    if (n_orbs >= 1):
+        for k1 in range(n_orbs) :
+            c=1.000-float(n_orbs-k1-1)/float(n_orbs)
+            line=str(" %15.7F %10.7F" % (float(orb_z[0]),float(c)))
+            pointerBasissetFile.write(line+" 1"+orb_type+"\n")
+            del orb_z[0]
+
 
 # Print Basis set file
 def printBasisFile():
@@ -331,11 +372,10 @@ def printBasisFile():
                 basistype   = atomsDataBase[j][2]
                 pseudotype  = atomsDataBase[j][3]
                 jastroworbs = atomsDataBase[j][4]
-                jastrowtype = atomsDataBase[j][5]
                 break
         n_jorbs=int(len(jastroworbs)/2) 
         printAtomicBasisset(i,basistype,pseudotype,n_jorbs)
-        printAtomicJastrow(jastroworbs,jastrowtype)
+        printAtomicJastrow(jastroworbs)
     pointerBasissetFile.close()
 
 if __name__ == "__main__":
@@ -350,6 +390,7 @@ if __name__ == "__main__":
     else:
         readArguments()
     if (printInputParFlag): 
+        inputParamsFile='param.inp'
         printInputParamsFile()
         print(" Printing default parameter file param.inp")
         print(" =======================================================================")
@@ -361,7 +402,8 @@ if __name__ == "__main__":
         exit()
     printInputArguments()
     readMolFile()
-    readInputParamsFile()
+    if (inputParamsFile != "empty" ):
+        readInputParamsFile()
     printBasisFile()
 
     print(" =======================================================================")
