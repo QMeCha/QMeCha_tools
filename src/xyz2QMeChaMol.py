@@ -189,7 +189,6 @@ if __name__ == "__main__":
         printHelp()
         exit()
     else:
-        print("hello")
         readArguments()
     
     printInputParameters()

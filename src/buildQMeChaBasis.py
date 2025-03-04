@@ -373,7 +373,7 @@ def printBasisFile():
                 pseudotype  = atomsDataBase[j][3]
                 jastroworbs = atomsDataBase[j][4]
                 break
-        n_jorbs=int(len(jastroworbs)/2) 
+        n_jorbs=int(len(jastroworbs)/3) 
         printAtomicBasisset(i,basistype,pseudotype,n_jorbs)
         printAtomicJastrow(jastroworbs)
     pointerBasissetFile.close()
