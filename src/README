@@ -1,0 +1,3 @@
+When reading the system paraemters be sure that you sseparate the string with the "=" character and NOT the space!
+
+For pseudo and basis set generator, check dataset library and if *.xyz is not present generate the basis set and the pseudo file for ALL the atoms.
