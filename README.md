@@ -1,8 +1,8 @@
 
-<img src="logo_long_bright.png" >
+<img src="logo_extended.png" >
 
 \
-Quantum MeCha (QMeCha)[^a] is a quantum Monte Carlo packate started in 2017 by [Dr. Matteo Barborini](https://www.uni.lu/fstm-en/people/matteo-barborini/) a Research Scientist at the [HPC Platform](https://www.uni.lu/research-en/core-facilities/hpc/) of the [University of Luxembourg](https://www.uni.lu), that is also the main developer of the code till now.
+Quantum MeCha (QMeCha)[^a] is a quantum Monte Carlo package started in 2017 by [Dr. Matteo Barborini](https://www.uni.lu/fstm-en/people/matteo-barborini/) a Research Scientist at the [HPC Platform](https://www.uni.lu/research-en/core-facilities/hpc/) of the [University of Luxembourg](https://www.uni.lu), that is also the main developer of the code till now.
 
 This repository contains some of the tools to initialize the molecular system file, the basis set and the pseudopotential.
 
@@ -56,12 +56,12 @@ O 5 0
 ```
 contains the atom's name, the number of contracted orbitals in the basis set, and the number of contracted orbitals in the Jastrow basis set (which is initialized to zero in all basis set files).
 
-Aterwards the contracted orbitals are listed in no particular order.
+Afterwards the contracted orbitals are listed in no particular order.
 For each contracted orbital, the first line contains the angular momentum followed by the number of primitive functions in the contraction:
 ```
  S   9
 ```
-afterwords the parameters of the contracted orbital are listed, and for each line
+afterwards the parameters of the contracted orbital are listed, and for each line
 ```
       54.7752160 -0.0012444 1G
       25.6168010  0.0107330 1G
@@ -105,7 +105,7 @@ Afterwards each term of the pseudopotential is listed without separations:
 2 13.71419 -47.87600
 2 13.65512  85.86406
 ```
-On each line we have the exponent of the polinomial, the exponential factor and the coefficient of the expansion.
+On each line we have the exponent of the polynomial, the exponential factor and the coefficient of the expansion.
 
 In this case the first three terms are associated to the local part of the pseudopotential, while the last row is related to the first non-local term.
 
