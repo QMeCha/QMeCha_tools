@@ -340,12 +340,15 @@ if __name__ == "__main__":
     paramFileName = args.param
     xyzFileName = args.xyz
 
-    idx_1 = sorted(set(args.id1))
-    idx_2 = sorted(set(args.id2))
+    idx_1 = set(args.id1)
+    idx_2 = set(args.id2)
 
-    if idx_1.intersection(idx_2) != {}:
+    if idx_1.intersection(idx_2) != set():
         raise Exception('Error: Dimers not clearly defined, overlapping indices.')
         sys.exit(1)
+
+    idx_1 = sorted(idx_1)
+    idx_2 = sorted(idx_2)
 
     name_jastFileIn = args.jstFileIn
     name_jastFileOut1 = args.jstFileOut1
