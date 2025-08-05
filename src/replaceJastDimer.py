@@ -299,24 +299,20 @@ def replaceDynJast(
             continue
         a1 = int(line.split()[0])
         a2 = int(line.split()[1])
-        coeff = float(line.split()[-1])
+        coeff = line.split()[-1]
         atom_id1 = np.argwhere(a1 <= ends)[0][0] + 1
         atom_id2 = np.argwhere(a2 <= ends)[0][0] + 1
-        if atom_id1 != atom_id2:
-            raise Exception(
-                "Error: Problem reading Gamma matrix: not using interatomic jastrow."
-            )
-            sys.exit(1)
         found = 1
         try:
-            coeff_in = np.argwhere(atom_indices == atom_id1)[0][0]
+            coeff_in_1 = np.argwhere(atom_indices == atom_id1)[0][0]
+            coeff_in_2 = np.argwhere(atom_indices == atom_id2)[0][0]
         except:
             found = 0
             pass
         if found:
-            a1_mod = starts_partial[coeff_in] + (a1 - starts[atom_id1 - 1])
-            a2_mod = starts_partial[coeff_in] + (a2 - starts[atom_id2 - 1])
-            newline = str(a1_mod) + " " + str(a2_mod) + " " + str(coeff)
+            a1_mod = starts_partial[coeff_in_1] + (a1 - starts[atom_id1 - 1])
+            a2_mod = starts_partial[coeff_in_2] + (a2 - starts[atom_id2 - 1])
+            newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
             twoBodyDynOut.append(newline)
         twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
         twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
