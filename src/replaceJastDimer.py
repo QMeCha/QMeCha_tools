@@ -303,7 +303,7 @@ def replaceDynJast(
     starts_partial = ends_partial - (jastSizes_partial - 1)
 
     for i, line in enumerate(twoBodyDynIn):
-        if jtype == 's':
+        if jtype == 's' or j == 'c':
             if i in (0,1,2):
                 twoBodyDynOut.append(line)
                 continue
@@ -316,7 +316,7 @@ def replaceDynJast(
             sys.exit(1)
         a1 = int(line.split()[0])
         a2 = int(line.split()[1])
-        coeff = line.split()[-1]
+        coeff = ' '.join(line.split()[2:])
         atom_id1 = np.argwhere(a1 <= ends)[0][0] + 1
         atom_id2 = np.argwhere(a2 <= ends)[0][0] + 1
         found = 1
@@ -332,7 +332,7 @@ def replaceDynJast(
             newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
             twoBodyDynOut.append(newline)
         twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
-        if jtype == 'm':
+        if jtype == 'm' or jtype == 'c':
             twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
         elif jtype == 's':
             twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])-1) + " " + twoBodyDynOut[1]
