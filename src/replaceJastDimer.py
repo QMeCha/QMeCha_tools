@@ -91,6 +91,14 @@ p.add_argument(
     help="(optional) Replace Jastrow basis set (input frmbass.sav path, monomer 1 frmbass.sav path, monomer 2 frmbass.sav path).",
 )
 
+p.add_argument(
+    "--jtype",
+    type=str,
+    default='m',
+    help="(optional) Type of correlated Jastrow: m (default), s, c",
+)
+
+
 args = p.parse_args()
 
 def readJastFact(
@@ -286,6 +294,7 @@ def replaceDynJast(
     twoBodyDynOut: list,
     jastSizes: list,
     atom_indices: list,
+    jtype: str
 ):
     ends = np.cumsum(jastSizes)
     starts = ends - (np.array(jastSizes) - 1)
@@ -294,12 +303,20 @@ def replaceDynJast(
     starts_partial = ends_partial - (jastSizes_partial - 1)
 
     for i, line in enumerate(twoBodyDynIn):
-        if i == 0 or i == 1:
-            twoBodyDynOut.append(line)
-            continue
+        if jtype == 's':
+            if i in (0,1,2):
+                twoBodyDynOut.append(line)
+                continue
+        elif jtype == 'm':
+            if i in (0,1):
+                twoBodyDynOut.append(line)
+                continue
+        else:
+            print("Error! Jastrow type not recognized!")
+            sys.exit(1)
         a1 = int(line.split()[0])
         a2 = int(line.split()[1])
-        coeff = line.split()[-1]
+        coeff = float(line.split()[-1])
         atom_id1 = np.argwhere(a1 <= ends)[0][0] + 1
         atom_id2 = np.argwhere(a2 <= ends)[0][0] + 1
         found = 1
@@ -312,7 +329,7 @@ def replaceDynJast(
         if found:
             a1_mod = starts_partial[coeff_in_1] + (a1 - starts[atom_id1 - 1])
             a2_mod = starts_partial[coeff_in_2] + (a2 - starts[atom_id2 - 1])
-            newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
+            newline = str(a1_mod) + " " + str(a2_mod) + " " + str(coeff)
             twoBodyDynOut.append(newline)
         twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
         twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
@@ -349,6 +366,8 @@ if __name__ == "__main__":
     name_jastFileIn = args.jstFileIn
     name_jastFileOut1 = args.jstFileOut1
     name_jastFileOut2 = args.jstFileOut2
+    jasType = args.jtype
+
 
     if args.jbas:
         name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
@@ -389,8 +408,8 @@ if __name__ == "__main__":
 
     if args.jd2:
         twoBodyDynOut1, twoBodyDynOut2 = [], []
-        replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1)
-        replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2)
+        replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1, jasType)
+        replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2, jasType)
 
     if args.jc1:
         oneBodyCuspOut1, oneBodyCuspOut2 = [], []
