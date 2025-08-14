@@ -303,7 +303,7 @@ def replaceDynJast(
     starts_partial = ends_partial - (jastSizes_partial - 1)
 
     for i, line in enumerate(twoBodyDynIn):
-        if jtype == 's' or j == 'c':
+        if jtype == 's' or jtype == 'c':
             if i in (0,1,2):
                 twoBodyDynOut.append(line)
                 continue
