@@ -331,11 +331,11 @@ def replaceDynJast(
             a2_mod = starts_partial[coeff_in_2] + (a2 - starts[atom_id2 - 1])
             newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
             twoBodyDynOut.append(newline)
-        twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
-        if jtype == 'm' or jtype == 'c':
-            twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
-        elif jtype == 's':
-            twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])-1) + " " + twoBodyDynOut[1]
+    twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
+    if jtype == 'm' or jtype == 'c':
+        twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
+    elif jtype == 's':
+        twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])-1) + " " + twoBodyDynOut[1]
 
 
 
