@@ -73,9 +73,9 @@ def printMolFile():
         molFilePointer.write("/\n")
         for i in range(n_at) :
             if (pseudo):
-                molFilePointer.write('*%c %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
+                molFilePointer.write('*%s %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
             else:
-                molFilePointer.write('%c %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
+                molFilePointer.write('%s %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
         molFilePointer.close()
     else:
         print("WARNING!!! Outfile is already present, please remove it or rename it.") 
