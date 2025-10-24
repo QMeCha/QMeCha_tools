@@ -174,10 +174,10 @@ def readMolFile():
         for line_num in range(read_from,read_from+n_at) :
             atom_names.append(molFileLines[line_num].split()[0])
         atom_names = list( dict.fromkeys(atom_names) )
-        atom_names =[ atom for atom in atom_names if '*' in atom ]
+        atom_names_pseudo =[ atom for atom in atom_names if '*' in atom ]
         for line_num in range(len(atom_names)) :
             atom_names[line_num]=atom_names[line_num].replace('*', '')
-        n_pseudo = len(atom_names)
+        n_pseudo = len(atom_names_pseudo)
         molFile.close()
     except:
         print(" Couldn't open file molecular QMeCha file")
@@ -194,6 +194,8 @@ def readArguments():
     global inputParamsFile
     global printInputParFlag
     global basissetFileName
+    global pol_type
+    pol_type = False
     for i in range(1,len(sys.argv)) :
         if ( sys.argv[i] == '-oneb'):
             one_body_type = int(sys.argv[i+1])
@@ -211,6 +213,8 @@ def readArguments():
             basissetFileName = str(sys.argv[i+1])
         if ( sys.argv[i] == '-prnt'):
             printInputParFlag = True
+        if ( sys.argv[i] == '-ext'):
+            pol_type = True
     if (basissetFileName=='empty'):
         #basissetFileName=xyzFileName.removesuffix('.xyz')+'.bas'
         basissetFileName=xyzFileName.replace('.xyz','.bas')
@@ -225,131 +229,88 @@ def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
     else:
         pointerBasissetFile.write( '*'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
     for line in range(1,len(atomicBasFileLines)) :
-        pointerBasissetFile.write(str(atomicBasFileLines[line]))
+        if line != len(atomicBasFileLines) -1:
+            pointerBasissetFile.write(str(atomicBasFileLines[line]))
+        else:
+            if str(atomicBasFileLines[line])[-1] != '\n':
+                pointerBasissetFile.write(str(atomicBasFileLines[line]+'\n'))
+            else:
+                pointerBasissetFile.write(str(atomicBasFileLines[line]))
     atomicBasFile.close()
 
-
-# Build and print Atomic Jastrow factor
 def printAtomicJastrow(jorbs):
     pointerBasissetFile.write("# Jastrow basis set \n")
-    orb_type_G = np.zeros(5,dtype=int)
-    orb_type_S = np.zeros(5,dtype=int)
-    orb_type_E = np.zeros(5,dtype=int)
-    orb_type_M = np.zeros(5,dtype=int)
-    for k1 in range(0,len(jorbs),3) :
-        if (jorbs[k1+2].upper()=='G' ) :
-            if (jorbs[k1+1].upper()=='S' ) :
-                orb_type_G[0] = orb_type_G[0] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='P' ) :
-                orb_type_G[1] = orb_type_G[1] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='D' ) :
-                orb_type_G[2] = orb_type_G[2] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='F' ) :
-                orb_type_G[3] = orb_type_G[3] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='G' ) :
-                orb_type_G[4] = orb_type_G[4] + int(jorbs[k1])
-        if (jorbs[k1+2].upper()=='S' ) :
-            if (jorbs[k1+1].upper()=='S' ) :
-                orb_type_S[0] = orb_type_S[0] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='P' ) :
-                orb_type_S[1] = orb_type_S[1] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='D' ) :
-                orb_type_S[2] = orb_type_S[2] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='F' ) :
-                orb_type_S[3] = orb_type_S[3] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='G' ) :
-                orb_type_S[4] = orb_type_S[4] + int(jorbs[k1])
-        if (jorbs[k1+2].upper()=='E' ) :
-            if (jorbs[k1+1].upper()=='S' ) :
-                orb_type_E[0] = orb_type_E[0] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='P' ) :
-                orb_type_E[1] = orb_type_E[1] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='D' ) :
-                orb_type_E[2] = orb_type_E[2] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='F' ) :
-                orb_type_E[3] = orb_type_E[3] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='G' ) :
-                orb_type_E[4] = orb_type_E[4] + int(jorbs[k1])
-        if (jorbs[k1+2].upper()=='M' ) :
-            if (jorbs[k1+1].upper()=='S' ) :
-                orb_type_M[0] = orb_type_M[0] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='P' ) :
-                orb_type_M[1] = orb_type_M[1] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='D' ) :
-                orb_type_M[2] = orb_type_M[2] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='F' ) :
-                orb_type_M[3] = orb_type_M[3] + int(jorbs[k1])
-            if (jorbs[k1+1].upper()=='G' ) :
-                orb_type_M[4] = orb_type_M[4] + int(jorbs[k1])
+    orb_type_G = np.zeros(5, dtype=int)
+    orb_type_S = np.zeros(5, dtype=int)
+    orb_type_E = np.zeros(5, dtype=int)
+    orb_type_M = np.zeros(5, dtype=int)
 
-    # generate exponentials
-    exp_type_G = [[],[],[],[],[]]
-    exp_type_S = [[],[],[],[],[]]
-    exp_type_E = [[],[],[],[],[]]
-    exp_type_M = [[],[],[],[],[]]
-    z_s = []
-    z_p = []
-    z_d = []
-    z_f = []
-    z_g = []
+    step = 4 if pol_type else 3
+
+    for k1 in range(0, len(jorbs), step):
+        n_orbs = int(jorbs[k1])
+        l_char = jorbs[k1+1].upper()
+        orb_type = jorbs[k1+2].upper()
+        m_orbs = int(jorbs[k1+2]) if pol_type else 1
+        if pol_type:
+            orb_type = jorbs[k1+3].upper()
+
+        l_index = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4}[l_char]
+
+        if orb_type == 'G':
+            orb_type_G[l_index] += n_orbs
+        elif orb_type == 'S':
+            orb_type_S[l_index] += n_orbs
+        elif orb_type == 'E':
+            orb_type_E[l_index] += n_orbs
+        elif orb_type == 'M':
+            orb_type_M[l_index] += n_orbs
+
+    # Generate exponentials
+    exp_type_G = [[], [], [], [], []]
+    exp_type_S = [[], [], [], [], []]
+    exp_type_E = [[], [], [], [], []]
+    exp_type_M = [[], [], [], [], []]
+
     for k1 in range(5):
-        if   (k1 == 0):
-            a=0.1
-        elif (k1 == 1):
-            a=0.25
-        elif (k1 == 2):
-            a=0.50
-        elif (k1 == 3):
-            a=0.75
-        elif (k1 == 4):
-            a=1.00
-        if ( orb_type_G[k1] > 0):
-            for k2 in range(orb_type_G[k1]) :
-                exp_type_G[k1].append(a+(1.0/np.sqrt(float(orb_type_G[k1] )))*float(orb_type_G[k1] -k2-1)**(1.7))
-        if ( orb_type_S[k1] > 0):
-            for k2 in range(orb_type_S[k1]) :
-                exp_type_S[k1].append(a+(1.0/np.sqrt(float(orb_type_S[k1] )))*float(orb_type_S[k1] -k2-1)**(1.7))
-        if ( orb_type_E[k1] > 0):
-            for k2 in range(orb_type_E[k1]) :
-                exp_type_E[k1].append(a+(1.0/np.sqrt(float(orb_type_E[k1] )))*float(orb_type_E[k1] -k2-1)**(1.7))
-        if ( orb_type_M[k1] > 0):
-            for k2 in range(orb_type_M[k1]) :
-                exp_type_M[k1].append(a+(1.0/np.sqrt(float(orb_type_M[k1] )))*float(orb_type_M[k1] -k2-1)**(1.7))
+        a = [0.1, 0.25, 0.50, 0.75, 1.00][k1]
+        for k2 in range(orb_type_G[k1]):
+            exp_type_G[k1].append(a + (1.0 / np.sqrt(orb_type_G[k1])) * (orb_type_G[k1] - k2 - 1) ** 1.7)
+        for k2 in range(orb_type_S[k1]):
+            exp_type_S[k1].append(a + (1.0 / np.sqrt(orb_type_S[k1])) * (orb_type_S[k1] - k2 - 1) ** 1.7)
+        for k2 in range(orb_type_E[k1]):
+            exp_type_E[k1].append(a + (1.0 / np.sqrt(orb_type_E[k1])) * (orb_type_E[k1] - k2 - 1) ** 1.7)
+        for k2 in range(orb_type_M[k1]):
+            exp_type_M[k1].append(a + (1.0 / np.sqrt(orb_type_M[k1])) * (orb_type_M[k1] - k2 - 1) ** 1.7)
 
-    # Print contracted orbitals to file
-    # Jorge suggests this could be a dictionary
-    for k1 in range(0,len(jorbs),3) :
-        n_orbs=int(jorbs[k1])
-        if (jorbs[k1+1].upper()=='S' ) :
-            l_orbs= 0
-        elif (jorbs[k1+1].upper()=='P' ) :
-            l_orbs= 1
-        elif (jorbs[k1+1].upper()=='D' ) :
-            l_orbs= 2
-        elif (jorbs[k1+1].upper()=='F' ) :
-            l_orbs= 3
-        elif (jorbs[k1+1].upper()=='G' ) :
-            l_orbs= 4
-        orb_type=jorbs[k1+2].upper()
-        pointerBasissetFile.write(" "+jorbs[k1+1].upper()+str(" %3d" % (n_orbs))+"\n")
-        if ( orb_type == 'G'):
-            printOrbital(n_orbs,orb_type,exp_type_G[:][l_orbs])
-        elif (orb_type == 'S') :
-            printOrbital(n_orbs,orb_type,exp_type_S[:][l_orbs])
-        elif (orb_type == 'E' ) :
-            printOrbital(n_orbs,orb_type,exp_type_E[:][l_orbs])
-        elif (orb_type == 'M' ) :
-            printOrbital(n_orbs,orb_type,exp_type_M[:][l_orbs])
+    # Print contracted orbitals
+    for k1 in range(0, len(jorbs), step):
+        n_orbs = int(jorbs[k1])
+        l_char = jorbs[k1+1].upper()
+        orb_type = jorbs[k1+2].upper()
+        m_orbs = int(jorbs[k1+2]) if pol_type else 1
+        if pol_type:
+            orb_type = jorbs[k1+3].upper()
 
-# Print orbital 
-def printOrbital(n_orbs,orb_type,orb_z):
-    if (n_orbs >= 1):
-        for k1 in range(n_orbs) :
-            c=1.000-float(n_orbs-k1-1)/float(n_orbs)
-            line=str(" %15.7F %10.7F" % (float(orb_z[0]),float(c)))
-            pointerBasissetFile.write(line+" 1"+orb_type+"\n")
+        l_index = {'S': 0, 'P': 1, 'D': 2, 'F': 3, 'G': 4}[l_char]
+        pointerBasissetFile.write(" " + l_char + str(" %3d" % n_orbs) + "\n")
+
+        if orb_type == 'G':
+            printOrbital(n_orbs, orb_type, exp_type_G[l_index], m_orbs)
+        elif orb_type == 'S':
+            printOrbital(n_orbs, orb_type, exp_type_S[l_index], m_orbs)
+        elif orb_type == 'E':
+            printOrbital(n_orbs, orb_type, exp_type_E[l_index], m_orbs)
+        elif orb_type == 'M':
+            printOrbital(n_orbs, orb_type, exp_type_M[l_index], m_orbs)
+
+def printOrbital(n_orbs, orb_type, orb_z, m_orbs):
+    if n_orbs >= 1:
+        for k1 in range(n_orbs):
+            c = 1.000 - float(n_orbs - k1 - 1) / float(n_orbs)
+            line = str(" %15.7F %10.7F" % (float(orb_z[0]), float(c)))
+            pointerBasissetFile.write(line + f" {m_orbs}" + orb_type + "\n")
             del orb_z[0]
-
 
 # Print Basis set file
 def printBasisFile():
@@ -373,7 +334,7 @@ def printBasisFile():
                 pseudotype  = atomsDataBase[j][3]
                 jastroworbs = atomsDataBase[j][4]
                 break
-        n_jorbs=int(len(jastroworbs)/3) 
+        n_jorbs=int(len(jastroworbs)/4) if (pol_type == True) else int(len(jastroworbs)/3) 
         printAtomicBasisset(i,basistype,pseudotype,n_jorbs)
         printAtomicJastrow(jastroworbs)
     pointerBasissetFile.close()
