@@ -6,6 +6,7 @@ import numpy as np
 import math
 import time
 import argparse
+from itertools import product
 
 '''
 This script replaces the full Jastrow factor from a
@@ -94,12 +95,15 @@ p.add_argument(
 p.add_argument(
     "--jtype",
     type=str,
-    default='m',
-    help="(optional) Type of correlated Jastrow: m (default), s, c",
+    default='ma',
+    help="(optional) Type of correlated Jastrow: [m (default), s, c][d, a, f]",
 )
 
-
-args = p.parse_args()
+p.add_argument(
+        "--reverse2b",
+        action="store_true",
+        help="(optional) Run the process in reverse by constructing the two-body dynamical Jastrow from the monomers and replacing it into the dimer."
+)
 
 def readJastFact(
     namejastFile: str,
@@ -228,7 +232,7 @@ def calculateJastSize(jastform):
     orb_sizes = {"s": 1, "p": 3, "d": 5, "f": 7, "g": 9, "h": 11}
     for orb in jast_orbitals:
         orb_type = orb[1]
-        jastsize += orb_sizes.get(orb_type)
+        jastsize += orb_sizes.get(orb_type, 0)
     return jastsize
 
 
@@ -236,18 +240,27 @@ def readJastBas(namejastFile: str, jastrowBasis: list):
     jastFileIn = open(namejastFile, "r")
     jastFileLines = jastFileIn.readlines()
     jastFileIn.close()
+    read_next = True
     for i, line in enumerate(jastFileLines):
-        if i == 0:
+        if (i == 0):
             jastrowBasis.append(line)
             atomBasis = []
-            continue
-        elif line.split()[0][0] == "*":
+        elif read_next:
+            bas_size = int(line.split()[1]) + int(line.split()[2])
+            bas_read = 0
             if atomBasis != []:
                 jastrowBasis.append(atomBasis)
             atomBasis = []
             atomBasis.append(line)
-            continue
-        atomBasis.append(line)  # assumption is we use the same basis set
+            read_next = False
+        else:
+            if line.split()[0] in ('S', 'P', 'D', 'F', 'G', 'H'):
+                bas_read += 1
+                l_read = 0
+                l_size = int(line.split()[1])
+            l_read += 1 if not line.split()[0] in ('S', 'P', 'D', 'F', 'G', 'H') else 0
+            atomBasis.append(line)  # assumption is we use the same basis set
+            read_next = bas_read == bas_size and l_read == l_size
     if atomBasis != []:
         jastrowBasis.append(atomBasis)
 
@@ -263,17 +276,18 @@ def writeJastBas(namejastFile: str, jastrowBasis: list, atom_indices: list):
     jastFileOut.close()
 
 
-def readXyzFile(xyzFileName: str, atom_types: list):
-    skipped = 0
-    xyzFile = open(xyzFileName, "r")
-    xyzFileLines = xyzFile.readlines()
-    xyzFile.close()
-    for line in xyzFileLines:
-        if line[0] != "*":
-            skipped += 1
-            continue
-        else:
-            atom_types.append(line[1])
+def readXyzFile(xyz_file_path):
+    with open(xyz_file_path, 'r') as xyz_file:
+        xyz_lines = xyz_file.readlines()
+        n_atoms = int(xyz_lines[1].split()[-1])
+        r_a = np.zeros(shape=(n_atoms, 3))
+        a_type = ['']*n_atoms
+        for i, line in enumerate(xyz_lines[6:6+n_atoms]):
+            s_line = line.split()
+            a_type[i] = "".join(filter(str.isalnum,s_line[0]))
+            for k in range(1,4):
+                r_a[i,k-1] = float(s_line[k])
+    return a_type, np.array(r_a)
 
 
 def readParamFile(paramFileName: str, jastSizes: list, atom_types: list):
@@ -321,8 +335,8 @@ def replaceDynJast(
         atom_id2 = np.argwhere(a2 <= ends)[0][0] + 1
         found = 1
         try:
-            coeff_in_1 = np.argwhere(atom_indices == atom_id1)[0][0]
-            coeff_in_2 = np.argwhere(atom_indices == atom_id2)[0][0]
+            coeff_in_1 = np.argwhere(np.array(atom_indices) == atom_id1)[0][0]
+            coeff_in_2 = np.argwhere(np.array(atom_indices) == atom_id2)[0][0]
         except:
             found = 0
             pass
@@ -337,6 +351,117 @@ def replaceDynJast(
     elif jtype == 's':
         twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])-1) + " " + twoBodyDynOut[1]
 
+def replaceDynJast_inverse(
+        twoBodyDynIn1: list,
+        twoBodyDynIn2: list,
+        twoBodyDynOut: list,
+        jastSizes: list,
+        atom_indices1: list,
+        atom_indices2: list,
+        jtype = str,
+        is_full = bool
+):
+    max_idx = max(atom_indices1 + atom_indices2)
+    atom_indices_full = np.arange(max_idx)
+
+    ends = np.cumsum(jastSizes)
+    starts = ends - (np.array(jastSizes) -1)
+
+
+    jastSizes1 = np.array(jastSizes)[np.array(atom_indices1) -1]
+    jastSizes2 = np.array(jastSizes)[np.array(atom_indices2) -1]
+    ends1 = np.cumsum(jastSizes1)
+    ends2 = np.cumsum(jastSizes2)
+    starts1 = ends1 - jastSizes1 + 1
+    starts2 = ends2 - jastSizes2 + 1
+
+    for i, line in enumerate(twoBodyDynIn1):
+        if jtype == 's' or jtype == 'c':
+            if i in (0,1,2):
+                twoBodyDynOut.append(line)
+                sidx = 3
+                continue
+        elif jtype == 'm':
+            if i in (0,1):
+                twoBodyDynOut.append(line)
+                sidx = 2
+                continue
+        else:
+            print("Error! Jastrow type not recognized!")
+            sys.exit(1)
+        a1 = int(line.split()[0])
+        a2 = int(line.split()[1])
+        coeff = ' '.join(line.split()[2:])
+
+        atom_id1_mon = np.argwhere(a1 <= ends1)[0][0] + 1
+        atom_id2_mon = np.argwhere(a2 <= ends1)[0][0] + 1
+
+        atom_id1_dim = atom_indices1[atom_id1_mon - 1]
+        atom_id2_dim = atom_indices1[atom_id2_mon - 1]
+
+        coeff_in_1 = atom_id1_mon - 1
+        coeff_in_2 = atom_id2_mon - 1
+        a1_mod = starts[atom_id1_dim -1] + (a1 - starts1[coeff_in_1])
+        a2_mod = starts[atom_id2_dim -1] + (a2 - starts1[coeff_in_2])
+        newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
+        twoBodyDynOut.append(newline)
+
+    for i, line in enumerate(twoBodyDynIn2[sidx:]):
+        a1 = int(line.split()[0])
+        a2 = int(line.split()[1])
+        coeff = ' '.join(line.split()[2:])
+        coeff_len = len(line.split()[2:])
+
+        atom_id1_mon = np.argwhere(a1 <= ends2)[0][0] + 1
+        atom_id2_mon = np.argwhere(a2 <= ends2)[0][0] + 1
+
+        atom_id1_dim = atom_indices2[atom_id1_mon - 1]
+        atom_id2_dim = atom_indices2[atom_id2_mon - 1]
+
+        coeff_in_1 = atom_id1_mon - 1
+        coeff_in_2 = atom_id2_mon - 1
+
+        a1_mod = starts[atom_id1_dim -1] + (a1 - starts2[coeff_in_1])
+        a2_mod = starts[atom_id2_dim -1] + (a2 - starts2[coeff_in_2])
+        newline = str(a1_mod) + " " + str(a2_mod) + " " + coeff
+        twoBodyDynOut.append(newline)
+
+    #Write empty lines in full Jastrow
+
+    if is_full:
+        starts_partial_1 = starts[np.array(atom_indices1) -1]
+        starts_partial_2 = starts[np.array(atom_indices2) -1]
+        ends_partial_1 = ends[np.array(atom_indices1) -1]
+        ends_partial_2 = ends[np.array(atom_indices2) -1]
+
+
+        a1_idxs = []
+        a2_idxs = []
+        for k in range(len(starts_partial_1)):
+            a1_idxs.append(np.arange(starts_partial_1[k], ends_partial_1[k] + 1))
+        for k in range(len(starts_partial_2)):
+            a2_idxs.append(np.arange(starts_partial_2[k], ends_partial_2[k] + 1))
+
+        a1_idxs = np.concatenate(a1_idxs)
+        a2_idxs = np.concatenate(a2_idxs)
+        p1 = product(a1_idxs.tolist(), a2_idxs.tolist())
+        for idxs in p1:
+            a1 = idxs[0]
+            a2 = idxs[1]
+            newline1 = str(a1) + " " + str(a2) + " 0.00000000E+01"*coeff_len
+            newline2 = str(a2) + " " + str(a1) + " 0.00000000E+01"*coeff_len
+            twoBodyDynOut.append(newline1)
+            twoBodyDynOut.append(newline2)
+
+    #Sort lines for clarity
+    twoBodyDynOut[sidx:] = sorted(twoBodyDynOut[sidx:],
+            key=lambda s:(int(s.split()[0]), int(s.split()[1])))
+
+    twoBodyDynOut[1] = " ".join(twoBodyDynOut[1].split()[1:])
+    if jtype == 'm' or jtype == 'c':
+        twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])) + " " + twoBodyDynOut[1]
+    elif jtype == 's':
+        twoBodyDynOut[1] = str(len(twoBodyDynOut[2:])-1) + " " + twoBodyDynOut[1]
 
 
 def replaceOneBodyCusp(
@@ -354,90 +479,75 @@ def replaceOneBodyCusp(
     oneBodyCuspOut[1] = " ".join(oneBodyCuspOut[1])
 
 if __name__ == "__main__":
+    args = p.parse_args()
+
     paramFileName = args.param
-    xyzFileName = args.xyz
+    xyzFileName   = args.xyz
 
     idx_1 = set(args.id1)
     idx_2 = set(args.id2)
-
     if idx_1.intersection(idx_2) != set():
-        raise Exception('Error: Dimers not clearly defined, overlapping indices.')
+        print('Error: Dimers not clearly defined, overlapping indices.')
         sys.exit(1)
-
     idx_1 = sorted(idx_1)
     idx_2 = sorted(idx_2)
 
-    name_jastFileIn = args.jstFileIn
+    name_jastFileIn   = args.jstFileIn
     name_jastFileOut1 = args.jstFileOut1
     name_jastFileOut2 = args.jstFileOut2
-    jasType = args.jtype
 
+    jasType = args.jtype[0]
+    jasForm = args.jtype[1]
 
-    if args.jbas:
-        name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
-        jastBasisIn = []
-
-    atom_types = []
-    readXyzFile(xyzFileName, atom_types)
-
-    jastSizes = [0] * (len(idx_1) + len(idx_2)) #initialize array
+    # --- always prepare atom types and jast sizes ---
+    atom_types, _ = readXyzFile(xyzFileName)
+    jastSizes  = [0] * len(atom_types)
     readParamFile(paramFileName, jastSizes, atom_types)
 
+    # --- read input/output jastrows ---
     twoBodyDynIn, twoBodyCuspIn = [], []
     oneBodyCuspIn = []
-
     oneBodyCuspOut1, oneBodyCuspOut2 = [], []
     twoBodyDynOut1, twoBodyDynOut2 = [], []
-
+    oneBodyDynIn = []
     oneBodyDynD1, oneBodyDynD2 = [], []
 
-    readJastFact(
-        name_jastFileIn,
-        twoBodyDyn=twoBodyDynIn,
-        twoBodyCusp=twoBodyCuspIn,
-        oneBodyCusp=oneBodyCuspIn,
-    )
-    readJastFact(
-        name_jastFileOut1,
-        oneBodyDyn=oneBodyDynD1,
-        twoBodyDyn=twoBodyDynOut1,
-        oneBodyCusp=oneBodyCuspOut1,
-    )
-    readJastFact(
-        name_jastFileOut2,
-        oneBodyDyn=oneBodyDynD2,
-        twoBodyDyn=twoBodyDynOut2,
-        oneBodyCusp=oneBodyCuspOut2,
-    )
+    readJastFact(name_jastFileIn,  twoBodyDyn=twoBodyDynIn, twoBodyCusp=twoBodyCuspIn,
+                 oneBodyCusp=oneBodyCuspIn, oneBodyDyn=oneBodyDynIn)
+    readJastFact(name_jastFileOut1, oneBodyDyn=oneBodyDynD1, twoBodyDyn=twoBodyDynOut1,
+                 oneBodyCusp=oneBodyCuspOut1)
+    readJastFact(name_jastFileOut2, oneBodyDyn=oneBodyDynD2, twoBodyDyn=twoBodyDynOut2,
+                 oneBodyCusp=oneBodyCuspOut2)
 
+    # --- jd2 replacement ---
     if args.jd2:
-        twoBodyDynOut1, twoBodyDynOut2 = [], []
-        replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1, jasType)
-        replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2, jasType)
+        if args.reverse2b:
+            twoBodyDynIn = []
+            is_full = (jasForm == 'f')
+            replaceDynJast_inverse(twoBodyDynOut1, twoBodyDynOut2, twoBodyDynIn,
+                                   jastSizes, idx_1, idx_2, jasType, is_full)
+        else:
+            twoBodyDynOut1, twoBodyDynOut2 = [], []
+            replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1, jasType)
+            replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2, jasType)
 
+    # --- jc1 replacement ---
     if args.jc1:
         oneBodyCuspOut1, oneBodyCuspOut2 = [], []
         replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut1, idx_1)
         replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut2, idx_2)
 
+    # --- write jst.sav files ---
+    if not args.reverse2b:
+        writeJastFact(name_jastFileOut1, oneBodyCuspOut1, twoBodyCuspIn, oneBodyDynD1, twoBodyDynOut1)
+        writeJastFact(name_jastFileOut2, oneBodyCuspOut2, twoBodyCuspIn, oneBodyDynD2, twoBodyDynOut2)
+    else:
+        writeJastFact(name_jastFileIn, oneBodyCuspIn, twoBodyCuspIn, oneBodyDynIn, twoBodyDynIn)
 
-    writeJastFact(
-        name_jastFileOut1,
-        oneBodyCuspOut1,
-        twoBodyCuspIn,
-        oneBodyDynD1,
-        twoBodyDynOut1,
-    )
-    writeJastFact(
-        name_jastFileOut2,
-        oneBodyCuspOut2,
-        twoBodyCuspIn,
-        oneBodyDynD2,
-        twoBodyDynOut2,
-    )
-
-    if args.jbas:
+    # --- basis set files only if requested ---
+    if args.jbas and not args.reverse2b:
+        name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
+        jastBasisIn = []
         readJastBas(name_jastBasIn, jastBasisIn)
-
         writeJastBas(name_jastBasOut1, jastBasisIn, idx_1)
         writeJastBas(name_jastBasOut2, jastBasisIn, idx_2)
