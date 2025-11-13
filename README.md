@@ -1,21 +1,46 @@
 
-<img src="logo_extended.png" >
+<img src="logo_extended_tools.png" >
 
-\
-Quantum MeCha (QMeCha)[^a] is a quantum Monte Carlo package started in 2017 by [Dr. Matteo Barborini](https://www.uni.lu/fstm-en/people/matteo-barborini/) a Research Scientist at the [HPC Platform](https://www.uni.lu/research-en/core-facilities/hpc/) of the [University of Luxembourg](https://www.uni.lu), that is also the main developer of the code till now.
+<b>Quantum MeCha (QMeCha)[^a] - Tools </b>
 
-This repository contains some of the tools to initialize the molecular system file, the basis set and the pseudopotential.
+This repository contains some of the tools to initialize the molecular system file, the basis set and the pseudopotential of the QMeCha code.
 
-[^a]: From [Wikipedia](https://en.wikipedia.org/wiki/Mecha): *``In science fiction, mecha (Japanese: メカ, Hepburn: meka) or mechs are giant robots or machines, typically depicted as piloted, humanoid walking vehicles. The term was first used in Japanese after shortening the English loanword 'mechanism' (メカニズム, mekanizumu) or 'mechanical' (メカニカル, mekanikaru), but the meaning in Japanese is more inclusive, and 'robot' (ロボット, robotto) or 'giant robot' is the narrower term.''* 
+QMeCha is a quantum Monte Carlo package started in 2017 by [Dr. Matteo Barborini](https://www.uni.lu/fstm-en/people/matteo-barborini/) a Research Scientist at the [HPC Platform](https://www.uni.lu/research-en/core-facilities/hpc/) of the [University of Luxembourg](https://www.uni.lu), that is also the main developer of the code till now.
 
-### Basis sets and pseudopotentials in QMeCha format.
+For questions regarding the code please contact the creator directly.
+
+QMeCha is an endeavor that takes time and effort. \
+In order to support the young researchers that are behind its development, please cite the papers below that refer to the methods used. 
+
+Furthermore, please keep the creator of the code updated regarding the research that you are publishing with QMeCha. \
+This will enable the creator to use it to further promote his work, that serves your research. 
+
+Naturally, the creator is always willing to open new collaborations as contributor and co-supervisor.
+
+<b>Creator, main developer and scientific supervisor:</b>\
+Barborini, Matteo
+
+<b>Collaborators:</b>\
+Charry Martinez, Jorge Alfonso : Electron-Positron systems\
+Ditte, Matej : El-QDO method of electrons embedded in quantum Drude Oscillators and point charges\
+Andronikos, Leventis : Electronic wave functions and correlation effects\
+Kafanas, Georgios : Compilation, portability and optimization
+
+### Citing the code
+
+**QMeCha: quantum Monte Carlo package for fermions in embedding environments**\
+Matteo Barborini, Jorge Charry, Matej Ditte, Andronikos Leventis, Georgios Kafanas, Alexandre Tkatchenko\
+[*arXiv* (2025)](https://doi.org/10.48550/arXiv.2511.03439)
+
+
+### Basis sets and pseudopotentials in QMeCha format
 
 The organization of the files is discussed in depth in the manual. Here we briefly recall the basic aspects.
 The Basis sets and pseudopotentials contained in this repository are adjusted from the repository of [M. Burkatzki, C. Filippi and M. Dolg](http://burkatzki.com/pseudos/index.2.html) and from the [Pseudopotential Library](https://pseudopotentiallibrary.org/).
 
 Up till now the repository contains the BFD[^1], ccECP[^2] and eCEPP[^3] pseudopotentials with the corresponding basis sets.
 
-### Basis sets format.
+### Basis sets format
 
 **It is important to underline that all the basis sets have been reduced up to the G primitive functions. H Orbitals have been removed.**
 
@@ -109,7 +134,9 @@ On each line we have the exponent of the polynomial, the exponential factor and 
 
 In this case the first three terms are associated to the local part of the pseudopotential, while the last row is related to the first non-local term.
 
-#### References
+### References
+
+[^a]: From [Wikipedia](https://en.wikipedia.org/wiki/Mecha): *``In science fiction, mecha (Japanese: メカ, Hepburn: meka) or mechs are giant robots or machines, typically depicted as piloted, humanoid walking vehicles. The term was first used in Japanese after shortening the English loanword 'mechanism' (メカニズム, mekanizumu) or 'mechanical' (メカニカル, mekanikaru), but the meaning in Japanese is more inclusive, and 'robot' (ロボット, robotto) or 'giant robot' is the narrower term.''* 
 
 [^1]: (a) M. Burkatzki, C. Filippi, M. Dolg *Energy-consistent pseudopotentials for QMC calculations.* [*J. Chem. Phys.* **126**, 234105 (2007)](https://doi.org/10.1063/1.2741534) (b) M. Burkatzki, C. Filippi, M. Dolg *Energy-consistent small-core pseudopotentials for 3d-transition metals adapted to quantum Monte Carlo calculations.* [*J. Chem. Phys.* **129**, 164115 (2008)](https://doi.org/10.1063/1.2987872) 
 
