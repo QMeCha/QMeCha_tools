@@ -275,6 +275,20 @@ def writeJastBas(namejastFile: str, jastrowBasis: list, atom_indices: list):
 
     jastFileOut.close()
 
+def writeJastBas_inverse(namejastFile: str, jastrowBasis_1: list, jastrowBasis_2: list, a_idxs_1: list, a_idxs_2: list):
+    jastFileOut = open(namejastFile, "w")
+    #Jastrow basis set coefficients
+    jastFileOut.write(jastrowBasis_1[0])
+    for a in range(len(jastrowBasis_1)+len(jastrowBasis_2) -2):
+        if (a + 1) in a_idxs_1:
+            for line in jastrowBasis_1[a_idxs_1.index(a+1)+1]:
+                jastFileOut.write(line)
+        elif (a+1) in a_idxs_2:
+            for line in jastrowBasis_2[a_idxs_2.index(a+1)+1]:
+                jastFileOut.write(line)
+
+
+    jastFileOut.close()
 
 def readXyzFile(xyz_file_path):
     with open(xyz_file_path, 'r') as xyz_file:
@@ -545,9 +559,16 @@ if __name__ == "__main__":
         writeJastFact(name_jastFileIn, oneBodyCuspIn, twoBodyCuspIn, oneBodyDynIn, twoBodyDynIn)
 
     # --- basis set files only if requested ---
-    if args.jbas and not args.reverse2b:
-        name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
-        jastBasisIn = []
-        readJastBas(name_jastBasIn, jastBasisIn)
-        writeJastBas(name_jastBasOut1, jastBasisIn, idx_1)
-        writeJastBas(name_jastBasOut2, jastBasisIn, idx_2)
+    if args.jbas:
+        if not args.reverse2b:
+            name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
+            jastBasisIn = []
+            readJastBas(name_jastBasIn, jastBasisIn)
+            writeJastBas(name_jastBasOut1, jastBasisIn, idx_1)
+            writeJastBas(name_jastBasOut2, jastBasisIn, idx_2)
+        else:
+            name_jastBasOut, name_jastBasIn1, name_jastBasIn2 = args.jbas
+            jastBasIn1, jastBasIn2 = [], [] 
+            readJastBas(name_jastBasIn1, jastBasIn1)
+            readJastBas(name_jastBasIn2, jastBasIn2)
+            writeJastBas_inverse(name_jastBasOut, jastBasIn1, jastBasIn2, idx_1 , idx_2)
