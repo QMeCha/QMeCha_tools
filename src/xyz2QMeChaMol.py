@@ -72,7 +72,7 @@ def printMolFile():
         molFilePointer.write("units = 'angs'\n")
         molFilePointer.write("/\n")
         for i in range(n_at) :
-            if (pseudo):
+            if (pseudo) and ('Gh' not in atom_names[i]):
                 molFilePointer.write('*%s %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
             else:
                 molFilePointer.write('%s %13.8f %13.8f %13.8f \n' % (atom_names[i],atom_x[i],atom_y[i],atom_z[i]))
@@ -88,10 +88,16 @@ def readXYZFile():
     xyzFilePointer.readline() # Skip empty line
     for i in range(n_at) :
         line=xyzFilePointer.readline()
-        atom_names.append(str(line.split()[0]))
-        atom_x.append(float(line.split()[1]))
-        atom_y.append(float(line.split()[2]))
-        atom_z.append(float(line.split()[3]))
+        if ':' in line:#ghost atoms in Orca xyz
+            atom_names.append('Gh'+str(line.split()[0]))
+            atom_x.append(float(line.replace(':','').split()[1]))
+            atom_y.append(float(line.replace(':','').split()[2]))
+            atom_z.append(float(line.replace(':','').split()[3]))
+        else:
+            atom_names.append(str(line.split()[0]))
+            atom_x.append(float(line.split()[1]))
+            atom_y.append(float(line.split()[2]))
+            atom_z.append(float(line.split()[3]))
     xyzFilePointer.close()
 
 # Print input parameters
