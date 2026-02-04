@@ -175,9 +175,11 @@ def readMolFile():
             atom_names.append(molFileLines[line_num].split()[0])
         atom_names = list( dict.fromkeys(atom_names) )
         atom_names_pseudo =[ atom for atom in atom_names if '*' in atom ]
+        atom_names_ghost  =[ atom for atom in atom_names if 'Gh' in atom]
         for line_num in range(len(atom_names)) :
             atom_names[line_num]=atom_names[line_num].replace('*', '')
         n_pseudo = len(atom_names_pseudo)
+        n_ghost = len(atom_names_ghost)
         molFile.close()
     except:
         print(" Couldn't open file molecular QMeCha file")
@@ -221,11 +223,15 @@ def readArguments():
 
 # Print atomic basis set
 def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
-    atomicBasFile =open(qmecha_dir+'/basissets/'+pseudotype+'/'+atom+'.'+basistype+'.qmecha', 'r')
+    atom_name = atom.replace('Gh', '') if 'Gh' in atom else atom
+    ghost_atom = True if 'Gh' in atom else False
+    atomicBasFile =open(qmecha_dir+'/basissets/'+pseudotype+'/'+atom_name+'.'+basistype+'.qmecha', 'r')
     atomicBasFileLines=atomicBasFile.readlines()
     pointerBasissetFile.write("# Basis set "+basistype+" "+pseudotype+"\n")
-    if (pseudotype == 'AE') :
-        pointerBasissetFile.write( atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
+    if (pseudotype == 'AE') and not (ghost_atom) :
+        pointerBasissetFile.write( atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" )
+    elif (ghost_atom): 
+        pointerBasissetFile.write('Gh'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" )
     else:
         pointerBasissetFile.write( '*'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
     for line in range(1,len(atomicBasFileLines)) :
@@ -329,7 +335,8 @@ def printBasisFile():
     n_jorbs = 0
     for i in atom_names :
         for j in range(len(atomsDataBase)) :
-            if i == atomsDataBase[j][1] :
+            if i.replace('Gh', '') == atomsDataBase[j][1] :
+                print(atomsDataBase[j])
                 basistype   = atomsDataBase[j][2]
                 pseudotype  = atomsDataBase[j][3]
                 jastroworbs = atomsDataBase[j][4]
