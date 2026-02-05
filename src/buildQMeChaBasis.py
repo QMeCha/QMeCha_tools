@@ -231,7 +231,7 @@ def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
     if (pseudotype == 'AE') and not (ghost_atom) :
         pointerBasissetFile.write( atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" )
     elif (ghost_atom): 
-        pointerBasissetFile.write('Gh'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" )
+        pointerBasissetFile.write('Gh'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(0)+"\n" )
     else:
         pointerBasissetFile.write( '*'+atomicBasFileLines[0].split()[0]+" "+atomicBasFileLines[0].split()[1]+" "+str(n_jorbs)+"\n" ) 
     for line in range(1,len(atomicBasFileLines)) :
@@ -336,10 +336,9 @@ def printBasisFile():
     for i in atom_names :
         for j in range(len(atomsDataBase)) :
             if i.replace('Gh', '') == atomsDataBase[j][1] :
-                print(atomsDataBase[j])
                 basistype   = atomsDataBase[j][2]
                 pseudotype  = atomsDataBase[j][3]
-                jastroworbs = atomsDataBase[j][4]
+                jastroworbs = atomsDataBase[j][4] if 'Gh' not in i else []#do not add Jastrow orbitals to ghost atoms 
                 break
         n_jorbs=int(len(jastroworbs)/4) if (pol_type == True) else int(len(jastroworbs)/3) 
         printAtomicBasisset(i,basistype,pseudotype,n_jorbs)
