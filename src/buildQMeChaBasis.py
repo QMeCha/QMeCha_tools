@@ -245,7 +245,8 @@ def printAtomicBasisset(atom,basistype,pseudotype,n_jorbs):
     atomicBasFile.close()
 
 def printAtomicJastrow(jorbs):
-    pointerBasissetFile.write("# Jastrow basis set \n")
+    if len(jorbs) != 0:
+        pointerBasissetFile.write("# Jastrow basis set \n")
     orb_type_G = np.zeros(5, dtype=int)
     orb_type_S = np.zeros(5, dtype=int)
     orb_type_E = np.zeros(5, dtype=int)
