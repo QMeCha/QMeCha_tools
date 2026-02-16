@@ -36,6 +36,7 @@ OPTIONAL ARGUMENTS
             jstBasIn:   Dimer frmbss.sav path
             jstBasOut1: Monomer 1 frmbss.sav path
             jstBasOut2: Monomer 2 frmbss.sav path
+
 '''
 
 
@@ -104,6 +105,19 @@ p.add_argument(
         action="store_true",
         help="(optional) Run the process in reverse by constructing the two-body dynamical Jastrow from the monomers and replacing it into the dimer."
 )
+
+p.add_argument(
+        "--ghost_check",
+        action="store_true",
+        help="(optional) Check if the monomer basis sets contain ghost atoms to replace them back into the basis file."
+)
+p.add_argument(
+        "--ghost-mode",
+        nargs=1,
+        metavar=("ghost_monomer"),
+        help="(optional) Treat the dimer as a ghost dimer; replace values from the monomer (1 or 2) into the non-ghost monomer of the dimer (input 1/2)."
+)
+
 
 def readJastFact(
     namejastFile: str,
@@ -264,6 +278,13 @@ def readJastBas(namejastFile: str, jastrowBasis: list):
     if atomBasis != []:
         jastrowBasis.append(atomBasis)
 
+def getGhostIndices(jastrowBasis: list):
+    g_idxs = []
+    for k,a_bas in enumerate(jastrowBasis):
+        if 'Gh' in a_bas[0].split(0)[0]:
+            g_idxs.append(k)
+    return g_idxs
+
 
 def writeJastBas(namejastFile: str, jastrowBasis: list, atom_indices: list):
     jastFileOut = open(namejastFile, "w")
@@ -288,6 +309,18 @@ def writeJastBas_inverse(namejastFile: str, jastrowBasis_1: list, jastrowBasis_2
                 jastFileOut.write(line)
 
 
+    jastFileOut.close()
+
+def writeJastBas_withghosts(nameJastFile: str, jastrowBasis: list, jastrowBasisCP: list, atom_indices: list, ghost_indices: list):
+    jastFileOut = open(namejastFile, "w")
+    jastFileOut.write(jastrowBasis[0])
+    for i in range(len(jastrowBasis)):
+        if (i+1) in atom_indices:
+            for line in jastrowBasis[i+1]:
+                jastFileOut.write(line)
+        elif (i+1) in ghost_indices:
+            for line in jastrowBasisCP[i+1]:
+                jastFileOut.write(line)
     jastFileOut.close()
 
 def readXyzFile(xyz_file_path):
@@ -484,6 +517,7 @@ def replaceOneBodyCusp(
     oneBodyCuspOut.append(oneBodyCuspIn[0])
     oneBodyCuspOut.append(oneBodyCuspIn[1])
     for a_idx in atom_indices:
+        print(a_idx)
         for i in range(3):
             oneBodyCuspOut.append(oneBodyCuspIn[2 + i + (a_idx - 1) * 3])
     oneBodyCuspOut.append(oneBodyCuspIn[-1])
@@ -491,6 +525,15 @@ def replaceOneBodyCusp(
     oneBodyCuspOut[1].pop(2)
     oneBodyCuspOut[1].insert(2, str(len(atom_indices)))
     oneBodyCuspOut[1] = " ".join(oneBodyCuspOut[1])
+
+def replaceOneBodyCusp_ghost(
+    oneBodyCuspIn: list, oneBodyCuspOut:list, mon_idxs: list
+):
+    tot_atoms = int(oneBodyCuspOut[1].split()[2])
+    for a_idx in range(tot_atoms):
+        if a_idx + 1 in mon_idxs:
+            for i in range(3):
+                oneBodyCuspOut[2 + 3*a_idx +i] = oneBodyCuspIn[2+ 3*mon_idxs.index(a_idx+1) +i]
 
 if __name__ == "__main__":
     args = p.parse_args()
@@ -518,57 +561,101 @@ if __name__ == "__main__":
     jastSizes  = [0] * len(atom_types)
     readParamFile(paramFileName, jastSizes, atom_types)
 
-    # --- read input/output jastrows ---
-    twoBodyDynIn, twoBodyCuspIn = [], []
-    oneBodyCuspIn = []
-    oneBodyCuspOut1, oneBodyCuspOut2 = [], []
-    twoBodyDynOut1, twoBodyDynOut2 = [], []
-    oneBodyDynIn = []
-    oneBodyDynD1, oneBodyDynD2 = [], []
-
-    readJastFact(name_jastFileIn,  twoBodyDyn=twoBodyDynIn, twoBodyCusp=twoBodyCuspIn,
-                 oneBodyCusp=oneBodyCuspIn, oneBodyDyn=oneBodyDynIn)
-    readJastFact(name_jastFileOut1, oneBodyDyn=oneBodyDynD1, twoBodyDyn=twoBodyDynOut1,
-                 oneBodyCusp=oneBodyCuspOut1)
-    readJastFact(name_jastFileOut2, oneBodyDyn=oneBodyDynD2, twoBodyDyn=twoBodyDynOut2,
-                 oneBodyCusp=oneBodyCuspOut2)
-
-    # --- jd2 replacement ---
-    if args.jd2:
-        if args.reverse2b:
-            twoBodyDynIn = []
-            is_full = (jasForm == 'f')
-            replaceDynJast_inverse(twoBodyDynOut1, twoBodyDynOut2, twoBodyDynIn,
-                                   jastSizes, idx_1, idx_2, jasType, is_full)
-        else:
-            twoBodyDynOut1, twoBodyDynOut2 = [], []
-            replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1, jasType)
-            replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2, jasType)
-
-    # --- jc1 replacement ---
-    if args.jc1:
+    if not args.ghost_mode:
+        # --- read input/output jastrows ---
+        twoBodyDynIn, twoBodyCuspIn = [], []
+        oneBodyCuspIn = []
         oneBodyCuspOut1, oneBodyCuspOut2 = [], []
-        replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut1, idx_1)
-        replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut2, idx_2)
+        twoBodyDynOut1, twoBodyDynOut2 = [], []
+        oneBodyDynIn = []
+        oneBodyDynD1, oneBodyDynD2 = [], []
 
-    # --- write jst.sav files ---
-    if not args.reverse2b:
-        writeJastFact(name_jastFileOut1, oneBodyCuspOut1, twoBodyCuspIn, oneBodyDynD1, twoBodyDynOut1)
-        writeJastFact(name_jastFileOut2, oneBodyCuspOut2, twoBodyCuspIn, oneBodyDynD2, twoBodyDynOut2)
-    else:
-        writeJastFact(name_jastFileIn, oneBodyCuspIn, twoBodyCuspIn, oneBodyDynIn, twoBodyDynIn)
+        readJastFact(name_jastFileIn,  twoBodyDyn=twoBodyDynIn, twoBodyCusp=twoBodyCuspIn,
+                     oneBodyCusp=oneBodyCuspIn, oneBodyDyn=oneBodyDynIn)
+        readJastFact(name_jastFileOut1, oneBodyDyn=oneBodyDynD1, twoBodyDyn=twoBodyDynOut1,
+                     oneBodyCusp=oneBodyCuspOut1)
+        readJastFact(name_jastFileOut2, oneBodyDyn=oneBodyDynD2, twoBodyDyn=twoBodyDynOut2,
+                     oneBodyCusp=oneBodyCuspOut2)
 
-    # --- basis set files only if requested ---
-    if args.jbas:
+        # --- jd2 replacement ---
+        if args.jd2:
+            if args.reverse2b:
+                twoBodyDynIn = []
+                is_full = (jasForm == 'f')
+                replaceDynJast_inverse(twoBodyDynOut1, twoBodyDynOut2, twoBodyDynIn,
+                                       jastSizes, idx_1, idx_2, jasType, is_full)
+            else:
+                twoBodyDynOut1, twoBodyDynOut2 = [], []
+                replaceDynJast(twoBodyDynIn, twoBodyDynOut1, jastSizes, idx_1, jasType)
+                replaceDynJast(twoBodyDynIn, twoBodyDynOut2, jastSizes, idx_2, jasType)
+
+        # --- jc1 replacement ---
+        if args.jc1:
+            oneBodyCuspOut1, oneBodyCuspOut2 = [], []
+            replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut1, idx_1)
+            replaceOneBodyCusp(oneBodyCuspIn, oneBodyCuspOut2, idx_2)
+
+        # --- write jst.sav files ---
         if not args.reverse2b:
-            name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
-            jastBasisIn = []
-            readJastBas(name_jastBasIn, jastBasisIn)
-            writeJastBas(name_jastBasOut1, jastBasisIn, idx_1)
-            writeJastBas(name_jastBasOut2, jastBasisIn, idx_2)
+            writeJastFact(name_jastFileOut1, oneBodyCuspOut1, twoBodyCuspIn, oneBodyDynD1, twoBodyDynOut1)
+            writeJastFact(name_jastFileOut2, oneBodyCuspOut2, twoBodyCuspIn, oneBodyDynD2, twoBodyDynOut2)
         else:
+            writeJastFact(name_jastFileIn, oneBodyCuspIn, twoBodyCuspIn, oneBodyDynIn, twoBodyDynIn)
+
+        # --- basis set files only if requested ---
+        if args.jbas:
+            if not args.reverse2b:
+                name_jastBasIn, name_jastBasOut1, name_jastBasOut2 = args.jbas
+                if not args.ghost_check:
+                    jastBasisIn = []
+                    readJastBas(name_jastBasIn, jastBasisIn)
+                    writeJastBas(name_jastBasOut1, jastBasisIn, idx_1)
+                    writeJastBas(name_jastBasOut2, jastBasisIn, idx_2)
+                else:
+                    jastBasisIn = []
+                    readJastBas(name_jastBasIn, jastBasisIn)
+                    jastBasisIn1, jastBasisIn2 = [],[]
+                    readJastBas(name_jastBasOut1, jastBasisIn1)
+                    readJastBas(name_jastBasOut2, jastBasisIn2)
+                    g_idxs_1 = getGhostIndices(jastBasisIn1)
+                    g_idxs_2 = getGhostIndices(jastBasisIn2)
+                    writeJastBas_withghosts(name_jastBasOut1, jastBasisIn, jastBasisIn1, idx_1, g_idxs_1)
+                    writeJastBas_withghosts(name_jastBasOut2, jastBasisIn, jastBasisIn2, idx_2, g_idxs_2)
+            else:
+                name_jastBasOut, name_jastBasIn1, name_jastBasIn2 = args.jbas
+                jastBasIn1, jastBasIn2 = [], [] 
+                readJastBas(name_jastBasIn1, jastBasIn1)
+                readJastBas(name_jastBasIn2, jastBasIn2)
+                writeJastBas_inverse(name_jastBasOut, jastBasIn1, jastBasIn2, idx_1 , idx_2)
+    else:
+        twoBodyDynIn, twoBodyCuspIn = [], []
+        oneBodyCuspIn = []
+        oneBodyCuspOut =  []
+        twoBodyDynOut = []
+        oneBodyDynIn = []
+        oneBodyDynOut = []
+        twoBodyCuspOut = []
+        g_idxs = idx_2 if int(args.ghost_mode[0]) == 1 else idx_1 #ghost atom indices
+        mon_idxs = idx_1 if int(args.ghost_mode[0]) == 1 else idx_2 #monomer indices
+        ref_mon_path = name_jastFileOut1 if int(args.ghost_mode[0]) == 1 else name_jastFileOut2
+        
+        readJastFact(ref_mon_path, oneBodyDyn=oneBodyDynIn, twoBodyCusp=twoBodyCuspIn,
+                oneBodyCusp=oneBodyCuspIn, twoBodyDyn=twoBodyDynIn)
+        readJastFact(name_jastFileIn, twoBodyDyn=twoBodyDynOut, twoBodyCusp=twoBodyCuspOut,
+                oneBodyDyn=oneBodyDynOut, oneBodyCusp=oneBodyCuspOut)
+        
+        if args.jc1:
+            replaceOneBodyCusp_ghost(oneBodyCuspIn, oneBodyCuspOut, mon_idxs)
+
+        if args.jd2:
+            twoBodyDynOut = twoBodyDynIn
+
+        writeJastFact(name_jastFileIn, oneBodyCuspOut, twoBodyCuspIn, oneBodyDynOut, twoBodyDynOut) 
+            
+        if args.jbas:
             name_jastBasOut, name_jastBasIn1, name_jastBasIn2 = args.jbas
-            jastBasIn1, jastBasIn2 = [], [] 
-            readJastBas(name_jastBasIn1, jastBasIn1)
-            readJastBas(name_jastBasIn2, jastBasIn2)
-            writeJastBas_inverse(name_jastBasOut, jastBasIn1, jastBasIn2, idx_1 , idx_2)
+            ref_mon_bas = name_jastBasIn1 if int(args.ghost_mode[0]) == 1 else name_jastBasIn2
+            jastBasisIn, jastBasisOut, jastBasisOut_temp = [], [], []
+            readJastBas(ref_mon_bas, jastBasisIn)
+            readJastBas(name_jastBasOut, jastBasisOut_temp)
+            writeJastBas_inverse(name_jastBasOut, jastBasisIn, jastBasisOut_temp, mon_idxs, g_idxs)
