@@ -112,10 +112,10 @@ p.add_argument(
         help="(optional) Check if the monomer basis sets contain ghost atoms to replace them back into the basis file."
 )
 p.add_argument(
-        "--ghost-mode",
+        "--ghost_mode",
         nargs=1,
         metavar=("ghost_monomer"),
-        help="(optional) Treat the dimer as a ghost dimer; replace values from the monomer (1 or 2) into the non-ghost monomer of the dimer (input 1/2)."
+        help="(optional) Treat the dimer as a ghost dimer; replace values from the monomer (1 or 2) into the dimer"
 )
 
 
@@ -658,4 +658,4 @@ if __name__ == "__main__":
             jastBasisIn, jastBasisOut, jastBasisOut_temp = [], [], []
             readJastBas(ref_mon_bas, jastBasisIn)
             readJastBas(name_jastBasOut, jastBasisOut_temp)
-            writeJastBas_inverse(name_jastBasOut, jastBasisIn, jastBasisOut_temp, mon_idxs, g_idxs)
+            writeJastBas_inverse(name_jastBasOut, jastBasisIn, jastBasisOut_temp, mon_idxs, sorted(idx_1 + idx_2))
