@@ -146,13 +146,17 @@ def readInputParamsFile():
     pointerInputParamsFile = open(inputParamsFile, "r" )
     inputParamsFileLines = pointerInputParamsFile.readlines()
     for line in inputParamsFileLines :
-        if (len(line.split()) <=3 ) :
+        if (len(line.split()) <3 ) :
+            print(" Warning: Missing parameters in param.inp file, defaults will be used!")
             break
         for i in atomsDataBase :
             if ( i[1] == line.split()[0] ) :
                 i[2] = line.split()[1]
                 i[3] = line.split()[2]
-                i[4] = line.split()[3]
+                if len(line.split()) == 4:
+                    i[4] = line.split()[3]
+                else:
+                    i[4] = ""
                 break
     pointerInputParamsFile.close()
 
