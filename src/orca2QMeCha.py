@@ -50,37 +50,37 @@ def readOrcaMolOrb ( scfType, orcaFileLines, numAlphaOrbs, numBetaOrbs, numBas):
     numResidu = numAlphaOrbs - numBlocks*6
     label_vector = []
     tmpCoefMatAlpha = numpy.zeros ((numAlphaOrbs,numBas),dtype=float)
-    for i in range(0, len(orcaFileLines) ) :
-        line = orcaFileLines[i]
-        if scanLine in line :
-            xi = i + 6
-            xf = xi + numBas 
-            oi = 0
-            if numBlocks>=1:
-                for n_blocks in range(0,numBlocks):
-                    coef_num=0
-                    for x in range(xi,xf):
-                        line = orcaFileLines[x]
-                        if (n_blocks==0) :
-                            label_vector.append(str(line.split()[1]))
-                        for y in range(0,6):
-                            tmpCoefMatAlpha[y+oi][coef_num] =float( line.split()[y+2] )
-                        coef_num+=1
-
-                    oi+=6    
-                    xi = xf+4
-                    xf = xi + numBas
-
-            if numResidu>=1:
+    startLine = numpy.argwhere([scanLine in line for line in orcaFileLines] )[-1]
+    i = startLine[-1]
+    line = orcaFileLines[i]
+    if scanLine in line :
+        xi = i + 6
+        xf = xi + numBas 
+        oi = 0
+        if numBlocks>=1:
+            for n_blocks in range(0,numBlocks):
                 coef_num=0
                 for x in range(xi,xf):
                     line = orcaFileLines[x]
-                    if (numBlocks==0) :
+                    if (n_blocks==0) :
                         label_vector.append(str(line.split()[1]))
-                    for y in range(0,numResidu):
+                    for y in range(0,6):
                         tmpCoefMatAlpha[y+oi][coef_num] =float( line.split()[y+2] )
                     coef_num+=1
-            break
+
+                oi+=6    
+                xi = xf+4
+                xf = xi + numBas
+
+        if numResidu>=1:
+            coef_num=0
+            for x in range(xi,xf):
+                line = orcaFileLines[x]
+                if (numBlocks==0) :
+                    label_vector.append(str(line.split()[1]))
+                for y in range(0,numResidu):
+                    tmpCoefMatAlpha[y+oi][coef_num] =float( line.split()[y+2] )
+                coef_num+=1
 
     if scfType == 'UHF':
         scanLine = '0         1         2         3         4         5'
